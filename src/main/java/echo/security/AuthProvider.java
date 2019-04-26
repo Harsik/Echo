@@ -30,8 +30,8 @@ public class AuthProvider implements AuthenticationProvider{
 	
 	private Authentication authenticate(String id, String pw) throws AuthenticationException {
 		Account account = new Account(id, pw);
-		account = accountService.getMemberByUserName(id);
-		if ( account == null || !account.getPw().equals(pw)) {
+		account = accountService.getByUserName(id);
+		if ( account == null || !account.getPassword().equals(pw)) {
 			log.error("{} is not exist or password is not equals", id);
 			return null;
 		}
@@ -40,7 +40,7 @@ public class AuthProvider implements AuthenticationProvider{
 		 * Role 처리 필요, 일단 임의로 USER Role을 부여한다.  
 		**/
 		authList.add(new SimpleGrantedAuthority("ROLE_USER"));		
-        return new MyAuthentication(id, pw, authList, m);
+        return new MyAuthentication(id, pw, authList, account);
 	}
 
 	@Override

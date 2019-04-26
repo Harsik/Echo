@@ -33,13 +33,16 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http.csrf().disable().cors().and().authorizeRequests().antMatchers("/", "/home").permitAll().anyRequest()
-                .authenticated().and().formLogin().loginPage("/login").defaultSuccessUrl("/Alert")
+        http.csrf().disable().cors().and()
+        .authorizeRequests().antMatchers("/", "/home").permitAll().anyRequest()
+                .authenticated().and()
+                .formLogin().loginPage("/signin").defaultSuccessUrl("/alert")
                 .usernameParameter("id").passwordParameter("password")
                 .successHandler(customAuthenticationSuccessHandler).failureHandler(customAuthenticationFailureHandler)
-                .permitAll().and().logout().logoutSuccessUrl("/").permitAll();
+                .permitAll().and()
+                .logout().logoutSuccessUrl("/").permitAll();
 
-        http.authenticationProvider(authProvider);
+        //http.authenticationProvider(authProvider);
     }
 
     @Bean

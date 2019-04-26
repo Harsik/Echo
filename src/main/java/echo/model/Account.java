@@ -5,6 +5,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 
@@ -19,4 +20,10 @@ public class Account {
     private String name;
     private String username;
     private String password;
+
+    @Builder 
+	public Account(String username, String password) {
+		this.username = username;
+		this.password = password;
+	}
 }

@@ -36,4 +36,10 @@ public class AccountService implements UserDetailsService {
         account.setPassword(passwordEncoder.encode(account.getPassword()));
         return accountRepository.save(account);
     }
+
+    public Account getByUserName(String username){
+        Account account  = accountRepository.findByName(username)
+                .orElseThrow(() -> new UsernameNotFoundException("User not found with username : " + username));
+        return account;
+    }
 }

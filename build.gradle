@@ -34,8 +34,8 @@ dependencies {
     // end::security[]
 
     providedRuntime 'org.springframework.boot:spring-boot-starter-tomcat'
-    compile("org.springframework.session:spring-session-data-redis") 
-    compile("io.lettuce:lettuce-core") 
+    // compile("org.springframework.session:spring-session-data-redis") 
+    // compile("io.lettuce:lettuce-core") 
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.projectlombok:lombok")
 	annotationProcessor 'org.projectlombok:lombok:1.18.6'

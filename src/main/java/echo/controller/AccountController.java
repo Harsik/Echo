@@ -15,13 +15,13 @@ public class AccountController {
     @Autowired
     AccountService accountService;
 
-    @GetMapping("/create")
-    public Account create() {
-        Account account = new Account();
-        account.setName("user");
-        account.setPassword("password");
-        return accountService.save(account);
-    }
+    // @GetMapping("/create")
+    // public Account create() {
+    //     Account account = new Account();
+    //     account.setName("user");
+    //     account.setPassword("password");
+    //     return accountService.save(account);
+    // }
 
     @GetMapping("/iden")
     public String iden() {

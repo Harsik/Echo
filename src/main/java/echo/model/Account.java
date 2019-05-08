@@ -21,6 +21,8 @@ public class Account {
     private String username;
     private String password;
 
+    public Account(){};
+
     @Builder 
 	public Account(String username, String password) {
 		this.username = username;

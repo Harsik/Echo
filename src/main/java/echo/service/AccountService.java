@@ -32,14 +32,14 @@ public class AccountService implements UserDetailsService {
         // 고로 UserDetails 에서 새로운 class를 받아 return하는 것으로 이 문제를 해결 할 수 있다.
     }
 
-    public Account save(Account account) {
-        account.setPassword(passwordEncoder.encode(account.getPassword()));
-        return accountRepository.save(account);
-    }
+    // public Account save(Account account) {
+    //     account.setPassword(passwordEncoder.encode(account.getPassword()));
+    //     return accountRepository.save(account);
+    // }
 
-    public Account getByUserName(String username){
-        Account account  = accountRepository.findByName(username)
-                .orElseThrow(() -> new UsernameNotFoundException("User not found with username : " + username));
-        return account;
-    }
+    // public Account getByUserName(String username){
+    //     Account account  = accountRepository.findByName(username)
+    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with username : " + username));
+    //     return account;
+    // }
 }

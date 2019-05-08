@@ -22,6 +22,6 @@ public class CustomAuthenticationFailureHandler implements AuthenticationFailure
         System.out.println("username = " + username);
 
         // 로그인 실패시 필요한 작업 추가
-        response.sendRedirect("/secure/login.do?error=500");
+        // response.sendRedirect("/secure/login.do?error=500");
     }
 }

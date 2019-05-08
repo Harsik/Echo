@@ -37,6 +37,7 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
         System.out.println("  username : " + principal.getUsername());
         System.out.println("  name : " + principal.getName());
         System.out.println("  password : " + principal.getPassword());
+        System.out.println("  authorities : " + principal.getAuthorities());
 
         System.out.println("[credentials]");
         System.out.println("  " + authentication.getCredentials());

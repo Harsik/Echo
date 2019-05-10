@@ -2,11 +2,12 @@ package echo.payload;
 
 import javax.validation.constraints.*;
 
-import lombok.Builder;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.AccessLevel;
 import lombok.Setter;
+import lombok.Builder;
+import lombok.AccessLevel;
+import lombok.NoArgsConstructor;
+import lombok.AllArgsConstructor;
 
 // @Notnull 일 경우
 // null 허용 하지 않는다.“”허용한다.
@@ -16,6 +17,8 @@ import lombok.Setter;
 // @Data //Type definition error 발생 
 @Getter
 @Setter
+@Builder
+@AllArgsConstructor
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class SignUpRequest {
 
@@ -27,9 +30,4 @@ public class SignUpRequest {
     @Size(min = 6, max = 20)
     private String password;
 
-    @Builder
-    public SignUpRequest(String email, String password){
-        this.email=email;
-        this.password=password;
-    }
 }

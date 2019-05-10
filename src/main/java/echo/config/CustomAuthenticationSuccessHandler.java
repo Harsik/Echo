@@ -12,7 +12,10 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.web.authentication.SavedRequestAwareAuthenticationSuccessHandler;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
-import echo.model.AccountPrincipal;
+import echo.security.AccountPrincipal;
+
+
+
 
 @Configuration
 public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthenticationSuccessHandler {
@@ -35,7 +38,6 @@ public class CustomAuthenticationSuccessHandler extends SavedRequestAwareAuthent
         AccountPrincipal principal = (AccountPrincipal) authentication.getPrincipal();
         System.out.println("[principal]");
         System.out.println("  username : " + principal.getUsername());
-        System.out.println("  name : " + principal.getName());
         System.out.println("  password : " + principal.getPassword());
         System.out.println("  authorities : " + principal.getAuthorities());
 

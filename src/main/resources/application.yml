@@ -1,0 +1,45 @@
+server:
+    port: 8081
+    compression:
+        enabled: true
+    servlet:
+        session:
+            cookie:
+                http-only: true
+                secure: true
+
+spring:
+    datasource:
+        url: jdbc:mysql://192.168.137.59:3306/db_example?serverTimezone=UTC
+        driverClassName: com.mysql.jdbc.Driver
+        username: springuser
+        password: ThePassword
+        initialization-mode: always
+    jpa:
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.MySQL5InnoDBDialect
+        hibernate:
+            ddl-auto: update         
+    security:
+        user:
+            name: user
+            password: test
+    jackson:
+        time-zone: UTC
+        serialization:
+            WRITE_DATES_AS_TIMESTAMPS: false
+        
+logging:
+    level:
+        ROOT: DEBUG
+        springframework:
+            web: always
+        org:
+            springframework:
+                # security: info
+                hibernate:
+                    SQL: debug
+app:
+    jwtSecret: JWTSuperSecretKey
+    jwtExpirationInMs: 604800000

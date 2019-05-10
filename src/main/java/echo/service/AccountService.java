@@ -1,7 +1,7 @@
 package echo.service;
 
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import javax.transaction.Transactional;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -10,18 +10,17 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import echo.model.Account;
-import echo.model.AccountPrincipal;
 import echo.repository.AccountRepository;
+import echo.security.AccountPrincipal;
 
 @Service
 public class AccountService implements UserDetailsService {
 
     @Autowired
     private AccountRepository accountRepository;
-    @Autowired
-    private PasswordEncoder passwordEncoder;
     
     @Override
+    @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         Account account = accountRepository.findByName(username).orElseThrow(
                 () -> new UsernameNotFoundException("User not found with username : " + username));
@@ -32,14 +31,11 @@ public class AccountService implements UserDetailsService {
         // 고로 UserDetails 에서 새로운 class를 받아 return하는 것으로 이 문제를 해결 할 수 있다.
     }
 
-    // public Account save(Account account) {
-    //     account.setPassword(passwordEncoder.encode(account.getPassword()));
-    //     return accountRepository.save(account);
-    // }
+    @Transactional
+    public UserDetails loadUserById(Long id){
+        Account account = accountRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found with id : " + id));
 
-    // public Account getByUserName(String username){
-    //     Account account  = accountRepository.findByName(username)
-    //             .orElseThrow(() -> new UsernameNotFoundException("User not found with username : " + username));
-    //     return account;
-    // }
+        return AccountPrincipal.create(account);
+    }
+
 }

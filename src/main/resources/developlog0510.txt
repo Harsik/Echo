@@ -1,0 +1,8 @@
+개발 2일차
+repository를 작성하는 jparepository 혹은 crudrepository를
+작성할때 @repository를 넣을 필요가 없다는 것이 기억났는데
+이걸 어디서 봤는지는 전혀 기억나지 않는다. 찾을까 했는데 
+귀찬아서 안 찾는다. orElseThrow(() -> new AppException("User Role not set."));
+부분에서 에러가 생기는데 라이브러리는 찾아도 해결하지 못하는
+이상한 현상이 생긴다. 원인을 좀 더 찾아봐야겠다.
+Lombok의 Builder와 @ID, @CreationTimestamp 등이 

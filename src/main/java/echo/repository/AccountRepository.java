@@ -8,7 +8,7 @@ import echo.model.Account;
 
 public interface AccountRepository extends JpaRepository<Account,Long>{
 
-    Optional<Account> findByName(String username);
+    Optional<Account> findByEmail(String email);
 
-    Boolean existsByUsername(String username);
+    Boolean existsByEmail(String email);
 }

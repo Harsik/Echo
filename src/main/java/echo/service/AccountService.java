@@ -22,7 +22,7 @@ public class AccountService implements UserDetailsService {
     @Override
     @Transactional
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Account account = accountRepository.findByName(username).orElseThrow(
+        Account account = accountRepository.findByEmail(username).orElseThrow(
                 () -> new UsernameNotFoundException("User not found with username : " + username));
         return AccountPrincipal.create(account);
         // 여기서 UserDetails에 대한 상세 프로퍼티들을 정의하고 리턴 할 수 있으나 jpa 혹은 redis 등에서 serializable 문제가 발생한다

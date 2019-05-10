@@ -1,11 +1,15 @@
 package echo.payload;
 
+import lombok.AllArgsConstructor;
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
 
-@Data
+@Getter
+@Setter
 @Builder
+@AllArgsConstructor
 public class ApiResponse {
     private Boolean success;
-    private String message;
+    private String message;    
 }

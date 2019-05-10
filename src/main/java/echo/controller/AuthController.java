@@ -1,5 +1,6 @@
 package echo.controller;
 
+import echo.exception.AppException;
 import echo.model.Account;
 import echo.model.Role;
 import echo.model.RoleName;
@@ -55,7 +56,7 @@ public class AuthController {
         // @RequestBody 혹은 @ResponseBody는 자바객체를 http으로(json) http를 자바객체로 변환해준다.
         // 고로 @RequestBody를 사용할려면 변환하고자 하는 자바객체 즉 class를 생성하여야한다.
         Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+                new UsernamePasswordAuthenticationToken(loginRequest.getEmail(), loginRequest.getPassword()));
 
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
@@ -65,7 +66,7 @@ public class AuthController {
 
     @PostMapping("/signup")
     public ResponseEntity<?> registerUser(@Valid @RequestBody SignUpRequest signUpRequest) {
-        if (accountRepository.existsByUsername(signUpRequest.getEmail())) {
+        if (accountRepository.existsByEmail(signUpRequest.getEmail())) {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"), HttpStatus.BAD_REQUEST);
         }
         // Creating user's account
@@ -73,8 +74,7 @@ public class AuthController {
 
         accont.setPassword(passwordEncoder.encode(accont.getPassword()));
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
-                .orElseThrow(() -> new AppException("User Role not set."));
+        Role userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(() -> new AppException("User Role not set."));
 
         accont.setRoles(Collections.singleton(userRole));
 
@@ -82,7 +82,6 @@ public class AuthController {
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/users/{email}")
                 .buildAndExpand(result.getEmail()).toUri();
-
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
 }

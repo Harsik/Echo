@@ -1,20 +1,34 @@
 package echo.model;
 
-import java.sql.Timestamp;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
+import javax.persistence.Table;
+import javax.persistence.JoinColumn;
 import javax.validation.constraints.Email;
 
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Builder;
-import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.AccessLevel;
 
 @Entity
-@Data
+@Getter
+@Setter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@Table(name = "accounts")
 public class Account {
 
     @Id
@@ -27,18 +41,20 @@ public class Account {
     private String password;
     
     @ManyToMany(fetch = FetchType.LAZY)
-    @JoinTable(name = "user_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @JoinTable(name = "account_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>(); // 다중 권한 부여 가능 하도록 HashSet 사용
 
     @CreationTimestamp
-    private Timestamp regdate;
+    private LocalDateTime createdAt;
 
     @UpdateTimestamp
-    private Timestamp update;
+    private LocalDateTime updateAt;
 
     @Builder
     public Account(String email, String password){
         this.email=email;
         this.password=password;
+        this.createdAt=LocalDateTime.now();
+        this.updateAt=LocalDateTime.now();
     }
 }

@@ -1,0 +1,21 @@
+개발 3일차
+vue에서 부모 자식간 통신은 어떻게 하는가에 대해 여러 글들을 찾아보았다.
+prop도 이용해 보고 $emit도 이용해 보라고 한다. 
+오늘 구현할 첫번째 기능은 login을 성공한 후 Login.vue의 부모인 App.vue에
+currentUser라는 변수를 true로 $emit하여 메뉴 사이트 버튼을 보이게 하고
+login, signup을 보이지 않게 하는 것이다. 로그인 성공 후 어디서 잘못 되었는지
+currentUser가 true로 적용되지 않았다. 자식 컴포넌트로 전달할 currentUser에
+부모컴포넌트의 currentUser변수에 bind를 하였는데 뭔가 문제가 있는것 같다.
+자식컴포넌트에 prop을 넣지 않아서 인듯 싶었지만 이것만으로 해결되지는 않는다.
+잠깐 vue-router를 사용했을 때 부모자식간 데이터 통신은 어떻게하는 거지?
+다행히도 router-vue 컴포넌트에 바인드 했을때 전달된다. 문제는 $emit이 안됬다는 것이다.
+부모쪽에서도 전달 받는 변수 뿐만 아니라 메소드도 추가해야되는 듯. 아 드디어됬다!
+vue가 이렇게 힘들 줄야. 여기에 지금 했던 것을 정리한다.
+1. 부모->자식 이건 부모 영역에 자식 컴포넌트 선언태그 옆에 v-bind:currentUserLogin='currentUser'
+혹은 :currentUserLogin='currentUser'이다. 헷갈릴까봐 풀로 적는다.
+<router-view :currentUserLogin='currentUser' @sendCurrentUser="getCurrentUser"></router-view>
+여기서 currentUserLogin는 자식에서 props: ['currentUserLogin']로 값을 받을 수 있다.
+currentUser='currentUser'도 상관 없다. 앞에 선언된 이름이 자식에서 props으로 선언되야된다는게 
+중요하다. 그리고 자식->부모면 꼭 메소드로 전달할 수 있다. this.$emit('sendCurrentUser', true)하면
+부모에서  getCurrentUser: function (text) {this.currentUser = text} 인것이다. emit하면 text가
+true가 된다.

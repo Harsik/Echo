@@ -19,12 +19,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URI;
 import java.util.Collections;
@@ -74,7 +77,8 @@ public class AuthController {
 
         accont.setPassword(passwordEncoder.encode(accont.getPassword()));
 
-        Role userRole = roleRepository.findByName(RoleName.ROLE_USER).orElseThrow(() -> new AppException("User Role not set."));
+        Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
+                .orElseThrow(() -> new AppException("User Role not set."));
 
         accont.setRoles(Collections.singleton(userRole));
 
@@ -84,4 +88,14 @@ public class AuthController {
                 .buildAndExpand(result.getEmail()).toUri();
         return ResponseEntity.created(location).body(new ApiResponse(true, "User registered successfully"));
     }
+
+    // @PostMapping("/logout")
+    // public ResponseEntity<?> deAuthenticateUser() {
+    //     Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+    //     if (auth != null) {
+    //         SecurityContextHolder.clearContext();
+    //     }
+    //     return ResponseEntity.ok("Authentication Successfully Clear");
+    // }
+
 }

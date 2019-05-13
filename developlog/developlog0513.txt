@@ -17,5 +17,32 @@ vue가 이렇게 힘들 줄야. 여기에 지금 했던 것을 정리한다.
 여기서 currentUserLogin는 자식에서 props: ['currentUserLogin']로 값을 받을 수 있다.
 currentUser='currentUser'도 상관 없다. 앞에 선언된 이름이 자식에서 props으로 선언되야된다는게 
 중요하다. 그리고 자식->부모면 꼭 메소드로 전달할 수 있다. this.$emit('sendCurrentUser', true)하면
-부모에서  getCurrentUser: function (text) {this.currentUser = text} 인것이다. emit하면 text가
-true가 된다.
+부모에서  getCurrentUser: function (text) {this.currentUser = text} 인것이다. emit하면 전달한 true가
+text가 된다. 이제 간단하게 currentUser가 true때 UI를 구현해 놓고 Logout을 만들 차례이다.
+이상하게 Vuetify 최신 버전 메뉴얼을 사용하면 안되고 구 버전을 사용하니깐 내가 원했던 dropdown 메뉴가
+만들어 졌다. dropdown메뉴를 클릭하면 그 밑으로 profile,setting, logout 등을 구현할 예정이다.
+front 쪽에서도 로그 아웃 프로세스를 구현해야하며, back 쪽에서도 contexthandler를 통해
+authentication을 제거하는 과정을 거칠 것이다. 시작은 기반을 다지는 back 부터
+하다 보니 의문점이 들었다. 유저의 authentication을 만들면 무엇에 쓰는가? 시큐리티를
+구성하기 위한 과정 중 하나라 만들기는 했지만 정작 jwt 인증방식에 쓸모가 없어 보였다.
+일단 이유를 찾는 다면 첫째 요청에 따른 authentication을 찾아 서버 접근을 허용 거부 할 수
+있도록 만든다. 둘째를 적다가 찾았다. OncePerRequestFilter extends한 클래스 JwtAuthenticationFilter는
+doFilterInternal를 override하여 요청의 authentication이 서버내에 있는지 없는지를 파악한다.
+이로써 서버 접근을 허용 할지 말지를 정할 수 있다. 하지만 걱정되는건 logout을 위해
+SecurityContextHolder를 비우는 작업을 하는데 다른 유저들의 authentication까지 없애는건 아닐까?
+테스트가 필요하다. 아직도 security는 이해하기 어렵다. 일단 logout을 구현하기로 하였다. 
+혹시 기본설정만으로 가능할까 싶어서 시도해 보았지만 안되었다. 기본설정식 그러니깐 .logout.logoutURL("/logout")은
+security가 사용하는 필터들을 거치면서 기존의 logout 프로세스를 그대로 따라가면서 /error?logout으로 리다이렉트한다.
+결국 로그인 때와 마찬가지로 restcontroller로 postmapping을 통해 구현할 수 밖에 없었다. 필터로 /logout 오는 요청이
+permitAll인것을 확인하고 SecurityContextHolder를 초기화 하였다. 이런 정정할 것이 생겼다.
+서버는 SecurityContextHolder를 저장하지 않는다. https://okky.kr/article/258061 이글을 참고하자면
+필터 처리를 하면서 세션에 시큐리티 키값을 올리고 contextHolder.remove() 메소드를 호출하여 값을 비워버린다고 한다.
+이 프로젝트 경우에는 세션 대신 JWT가 생성한 것이다. 서버에 저장 된 것은 없고 세션 혹은 JWT가 로그인의 기준이
+되는 것이다. 그래서 참고 했던 샘플 프로젝트에서 logout에 대한 처리가 없었던 것이다. logout에 시간을 
+너무 뺏겨버렸다. 벌써 5시 반이다. 내일 해야 할 것을 적자. 스낵바로 로그인 메세지, 로그 아웃 메세지, 로그인 에러 메세지
+,signup을 구현을 해봐야겠다.
+마지막으로 이글을 되돌아 보면서 currentUser는 isAuthenticated로 변경하였습니다.
+
+
+
+

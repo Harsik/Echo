@@ -40,6 +40,14 @@ public class Account {
 
     private String password;
     
+    private String name;
+
+    private String bio; // 간단한 자기소개
+
+    private String company;
+
+    private String address;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "account_roles", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
     private Set<Role> roles = new HashSet<>(); // 다중 권한 부여 가능 하도록 HashSet 사용
@@ -52,9 +60,9 @@ public class Account {
 
     @Builder
     public Account(String email, String password){
-        this.email=email;
-        this.password=password;
-        this.createdAt=LocalDateTime.now();
-        this.updateAt=LocalDateTime.now();
+    this.email=email;
+    this.password=password;
+    this.createdAt=LocalDateTime.now();
+    this.updateAt=LocalDateTime.now();
     }
 }

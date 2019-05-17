@@ -1,5 +1,7 @@
 package echo.service;
 
+import java.time.LocalDateTime;
+
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +12,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import echo.model.Account;
+import echo.payload.ProfilePayload;
+import echo.payload.SignRequest;
 import echo.repository.AccountRepository;
 import echo.security.AccountPrincipal;
 
@@ -36,6 +40,25 @@ public class AccountService implements UserDetailsService {
         Account account = accountRepository.findById(id).orElseThrow(() -> new UsernameNotFoundException("User not found with id : " + id));
 
         return AccountPrincipal.create(account);
+    }
+
+    public Account editProfile(ProfilePayload profilePayload) {
+        Account account = accountRepository.findByEmail(profilePayload.getEmail())
+                .orElseThrow(() -> new UsernameNotFoundException("Account not found with email : " + profilePayload.getEmail()));
+        account.setName(profilePayload.getName());
+        account.setBio(profilePayload.getBio());
+        account.setCompany(profilePayload.getCompany());
+        account.setAddress(profilePayload.getAddress());
+        account.setUpdateAt(LocalDateTime.now());
+        
+        return accountRepository.save(account);
+    }
+    
+    public Account loadProfile(SignRequest signRequest) {
+        Account account = accountRepository.findByEmail(signRequest.getEmail()).orElseThrow(
+                () -> new UsernameNotFoundException("Account not found with email : " + signRequest.getEmail()));
+
+        return account;
     }
 
 }

@@ -1,0 +1,35 @@
+개발 5일차
+오늘은 signup 구현 먼저 시도 하기 시작하였다. alpha 프로젝트에서 구현 되어 있던 signup에서 이해가 안되는 부분이 많아
+이부분은 먼저 이해하고 시작할려고 한다. 코드에 주석을 달면서 정리 하겠다. 이 밑은 signup 코드의 일부분이다.
+ Account accont = new Account(signUpRequest.getEmail(), signUpRequest.getPassword());
+
+        accont.setPassword(passwordEncoder.encode(accont.getPassword()));
+
+        Role userRole = roleRepository.findByName(RoleName.ROLE_USER) // 계정 생성시 기본적으로 ROLE_USER 룰값이 들어가게된다.
+                .orElseThrow(() -> new AppException("Account Role not set.")); // 룰에 대한 값이 없을 경우 오류가 발생한다.
+
+        accont.setRoles(Collections.singleton(userRole)); // accont class에 rolerepository에서 받은 값을 hashset 형식으로 저장한다.
+
+        Account result = accountRepository.save(accont); 룰값이 저장된 accout 객체를 accountRepository로 저장한다.
+
+        URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/users/{email}") 
+                .buildAndExpand(result.getEmail()).toUri();
+        return ResponseEntity.created(location).body(new ApiResponse(true, "Account registered successfully"));
+        // fromCurrentContextPath로 생성된 uri를 넣어주면
+        // HTTP Header에 Location=http://localhost/api/users/{username}에 정보가 들어간다.
+        // Response header에 Location:http://localhost:8080/api/users/user2@email.com 확인
+        // 전 프로젝트에서 유저 프로파일을 불러 오기 위한 선언으로 보인다. 나는 현재 쓸모 없으니 변경할 예정이다.
+앱에서 계정 생성이 정상적으로 되는 것을 확인하였다.
+메인 기능 구현이 끝나서 기타 잡다한 기능이나 명명등을 손보고 있다. 아직도 고민되는 것인 signin을 쓸것이냐 login을 쓸꺼이냐 인데
+이전 프로젝트와 차별성을 두는 것이 좋다고 생각한다. login으로 싹다 고치고 signout 또한 logout으로 고칠 것이다.
+앱 화면 진행에서 대해서 쓰자면 첫화면은 welcome -> login -> inspire이다. 다른 것들을 나열하자면 signup -> signin, logout -> login
+그래서 화면 진행 테스트 도중에 welcome 페이지로 가는 방법이 툴바 사이드 메뉴를 이용하는 것 밖에 없어 답답하여 appTitle을 클릭하면 
+첫 화면은 welcome으로 갈 수 있도록 만들려고 한다. 다 만들었다. 점심 먹고 나서 debounce 적용 한번 해보자.
+github 보니깐 다시 아바타 이미지 만들고 싶다는 생각이 든다. 언젠가 제대로 된 것으로 만들어서 favicon으로도 쓸 수 있는 이미지를 
+만들리. 하 드디어 debounce가 성공했다. 왜 어느 글에서도 import _ from 'lodash' 해줘야된다는 것을 안알려줄까? npm에서 v-debounce를
+이용하여 해볼려고 했으니 잘 안되던 와중에 드디어 방법을 찾아냈다. debounce가 성공한 것은 좋으나 이것을 rule에 적용시키기가 까다롭다.
+어떻게 해야하나 룰을 새로 제작해보기도 하고, method에 넣기도 하고, watch에 넣어보기도 했는데 만족스러운 결과물이 나오지 않는다.
+this.vertifyEmail is not a function 왜 룰에 넣어둔 vertifyEmail이 메소드로 인식되지 않는 것일까? 내 생각엔 data를 초기값는 넣는
+부분에 메소드를 넣어서 파싱되지 않는 것 같다. 하 진짜 여러가지 테스트를 해봤지만 잘 안된다. 오늘 여기까지 해봐야겠다. 
+거의 다 온것 같은데. 이대로 끝내기가 아쉽다.
+

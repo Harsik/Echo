@@ -1,0 +1,81 @@
+개발 6일차
+내가 이걸 붙잡고 시작한지 벌써 6일차라니 실감이 안된다. 속이 뒤집어 질것 같다. 아침에 방탄 커피라는 것을
+편의점에서 팔길래 호기심에 먹어본게 화가 되었다. 어제먹은 코울슬로가 계속 떠오른다. 아 이걸 일기로 쓰면 안되는데
+평소에 편한대로 하다보니 적게 된다. 잡설은 여기까지 하고 어제 debounce를 이용하여 이미 등록된 email인지
+아닌지를 지연 판단하는 작업을 마치고 이것을 rules에 적용하는 작업을 하고 있었는데 rules에 대한 이해가
+떨어져인지 기능 작동 방식을 숨겨놔서 내가 이걸 어떻게 적용 시켜야하는지 힘들어 하고 있었다. 이해를 해야
+내가 원하는 작업을 마칠 수 있을 것 같다. 이메일 룰에 대한 정의 : 1.비어있으면 안된다. 
+2. email에 맞는 정규식을 만족해야한다. 3. email이 db에 있는 것이면 안된다. 4. 위 정의가 차례대로 적용되야 한다.
+아 젠장 할 수 있는 거의 모든 걸 다 해봤는데도 안된다. 다른 방법으로 적용하고 넘어갈려고 한다.
+이 글 맨 밑에 그동안 시도해 왔던걸 적어 놓겠다. 하지만 내가 생각한 궁극적인 폼 유효성 검사방식은 변하지 않았다. 
+좀 더 괜찬은 방법이 있을 것이다. 그리고 생각하던게 있다. api에 대한 응답을 서버는 왜 하는가에 대해서인데
+이것은 it환경이 단순 웹 접속이 아닌 다양한 기기와 매체로 접근하다 보니깐 이걸 대응하기 위해서 시대적 흐름이
+frontend와 backend로 나뉘는 것으로 바뀌어 버렸고, 설치되어 있는 앱을 버전업데이트를 하는 것보다 api 응답을
+변경함으로서 내가 원하는 부분을 바뀌어 사용하는 것이 합리적으로 변하였다. 하지만 응답으로써 모든 것을 해결 할 수 
+없으며 많은 데이터량과 응답 횟수는 도리어 부작용을 일으킬 수 있다. 그래서 데이터량은 얼마 안되지만 자주 변경해야
+하거나 변경해도 부담없는 부분에 API 응답을 구현함으로써 좀 더 간단하게 제어가 가능할 수 있다. API 응답에 대한
+내 의견은 여기까지이다. 더미 데이터를 통한 리스트 구현은 나중으로 미루고 계정에 대한 profile 및 app setting
+구현을 먼저하기로 하였다. 자 그러면 profile에는 어떤 정보가 들어가야 할까? 어플리케이션의 목적에 맞는 개인의 
+정보 예를 들면 쇼핑몰에서 내가 어떤 물건을 삿는가 등등 이겠지만 여기서는 아바타, 성명, nickname, 나이, 성별, 주소, 전화번호정도로
+마무리하겠다. 로그인 시 첫번째 로그인이면 바로 profile로 가게 만들까 생각해봤는데 역시 아닌것 같다. 일단 이 
+profile에 기능을 상세히 적겠다. 일단 개인의 아타바 즉 사진을 업로드 가능해야 한다. 하지만 이것은 파일 서버 업로드 다운로드
+기능을 먼저 해야함으로 나중에 구현하도록 하겟다. 다음 profile을 들어갈 시 계정의 정보를 불러 들여야 한다.
+다음 profile 안에서 계정의 정보를 수정 가능 해야하며 적합한 validate를 거쳐야 한다. 또한 email은 id로 사용해야 하기 때문에 
+변경 할 수 없도록 해야한다. 다음 계정 삭제 기능을 제공해야 하며 기록을 남겨야 하기 때문에 계정의 사용여부를 사용 안함으로 맞추는 수준으로
+기능을 만들어야한다. jpa 기능에 대해서 모르는 점이 많다. 단순히 get, set만 해서 객체를 만들 수 
+있지만 불편하고 코드가 복잡해 진다. 뭔가 좋은 방법이 있을 텐데. 필요로 하는 파라미터를 모두 수용할 수 있는 오브젝트를 생성하는 선언문을
+하나 더 만들었다. 그리고 profile 정보가 복잡해져서 name, bio, company, address로 줄였다. 선언문을 추가해서 문제를 해결 할 수 없었다.
+계정 정보를 불러와서 필요한 부분만 수정하고 싶은데 진짜 set get 써야하는 건가? 맞네 써야한다. 좋아 컨트롤러에서 /api/account/profile/edit으로
+접근하면 payload인 editprofile객체에서 email를 얻고 db에서 email을 조건으로 account 정보를 얻어 account 객체를 생성 후 payload에서 파라미터로
+받은 값들을 불러들여 account 변수에 저장하고 이를 repository.save 기능을 이용해 db에 저장한다. 이제 화면을 만들 차례이다.
+늘 그렇지만 화면을 만들려고 하면 머리가 멍해 지는게 무엇부터 해야할지 막막해 진다. 우선 내가 만들고자 하는 것이 무엇인지를 잘 알아야 한다.
+화면을 깔끔하고 예쁘게 만들려고 하니 기존에 로그인 화면 등등이 초라하게 보인다 v-card 를 써서 일단 꾸며 보자 로그인 화면을 잘 꾸민다면
+프로파일 화면도 잘 만들 수 있을 것이다. 하 난 상상력이 결핍된 것 같다. 꽤 많은 방법을 쓴 것 같은데 전혀 예뻐 보이지 않는다 감성부족인가
+공백 주고 싶은 부분이 있는데 이걸 어떻게 할까 찾다가 기능중 space helper 간략하게 말하자만 자주 썻던 margin과 padding을 다룬다.
+이걸로 좀 꾸며 보자. padding 넣으니깐 이제야 좀 쓸만해 보인다. 간략한 Profile이 완성되었다. 이제 로그인한 계정의 정보를 불러오는 것을 하겠다.
+불러오기 작업을 하고 있는데 뭔가 복잡하다 alpha에서는 시큐리티에서 어노테이션을 너무 자주 부르는 문제를 해결 하기 위해 @crruent를 선언하는 방법을 썻다.
+인터페이스를 어노테이션으로 만들어 쓰는데 좀 더 자세한 이해가 필요하다. 핵심은 이것 @AuthenticationPrincipal이다. security가 authentication을 부여한 
+객체를 따로 만들어 생성한다. security에 대한 의존성을 낮추는 방식으로 사용된다. 근데 왜 의존성을 낮추는 작업을 했는지 모르겠다. 너무 심화적인 부분을
+다루고 있는 것 같다. 간단하게 가자 간단하게. request로 email를 보내면 response로 계정정보가 오게. 권한 문제가 생긴다 jwt로 제대로 권한을 취득하고 있는지
+내일 알아봐야할 것 같다.
+
+
+emailRules: [
+      v => !!v || 'Email is required',
+      v =>
+        /^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ||
+        'Email must be valid'
+      // 룰에 대한 정의 : 1.비어있으면 안된다. 2. email에 맞는 정규식을 만족해야한다. 3. email이 db에 있는 것이면 안된다. 4. 위 정의가 차례대로 적용되야 한다.
+      // value => {
+      //   if (value.length > 0) {
+      //     const pattern = /^(([^<>()[\]\\.,:\s@']+(\.[^<>()[\]\\.,:\s@']+)*)|('.+'))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+      //     if (pattern.test(value)) {
+      //       if (this.emailAvailable) {
+      //         return true
+      //       } else {
+      //         return 'Email is already taken'
+      //       }
+      //     } else {
+      //       return 'Email must be valid'
+      //     }
+      //   }
+      // }
+      // () => !!this.emailAvailable || 'This field is required'
+      // v => {
+      //   if (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v)) {
+      //     return this.emailAvailable ? true : 'Email is already taken'
+      //   } else {
+      //     return 'Email must be valid'
+      //   }
+      // }
+      // v => this.emailAvailable || 'Email is already taken' // emailAvailable이 true면 v로 반환이고 false면 'email ...'이 반환되도록 한것이나 항상 문자열만 반환중
+      // v => this.vertifyEmail(v) || 'Email is already taken' //_this.vertifyEmail is not a function
+      // v => (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ? this.checkEmail : 'Email must be valid') || 'Email must be valid'
+      // v => this.checkEmail ? '' : 'Email is already taken'
+      // v => false || (this.checkEmail ? '' : 'Email is already taken')
+      // v => (_.debounce(this.vertifyEmail(), 500)) || 'Email is already taken'
+    ], // 적용되는 룰이 첫번째 부터 차례대로 적용된다.
+    // emailAvailableRule: [
+    //   value => { return this.emailAvailable ? true : 'Email is already taken' }
+    // ],
+    

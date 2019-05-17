@@ -68,6 +68,7 @@ emailRules: [
       //     return 'Email must be valid'
       //   }
       // }
+       v => (this.emailAvailable ? true : 'Email is already taken') // 왜인지 모르겠지만 항상 false값으로 해당되는 뒷값만 리턴함 내 생각엔 동적으로 값이 적용되지 않는 것 같다.
       // v => this.emailAvailable || 'Email is already taken' // emailAvailable이 true면 v로 반환이고 false면 'email ...'이 반환되도록 한것이나 항상 문자열만 반환중
       // v => this.vertifyEmail(v) || 'Email is already taken' //_this.vertifyEmail is not a function
       // v => (/^\w+([.-]?\w+)*@\w+([.-]?\w+)*(\.\w{2,3})+$/.test(v) ? this.checkEmail : 'Email must be valid') || 'Email must be valid'

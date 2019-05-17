@@ -58,10 +58,22 @@ public class Account {
     @UpdateTimestamp
     private LocalDateTime updateAt;
 
+    // @Builder
+    // public Account(String email, String password){
+    // this.email=email;
+    // this.password=password;
+    // this.createdAt=LocalDateTime.now();
+    // this.updateAt=LocalDateTime.now();
+    // }
+    
     @Builder
-    public Account(String email, String password){
+    public Account(String email, String password, String name, String bio, String company, String address){
     this.email=email;
     this.password=password;
+    this.name=name;
+    this.bio=bio;
+    this.company=company;
+    this.address=address;
     this.createdAt=LocalDateTime.now();
     this.updateAt=LocalDateTime.now();
     }

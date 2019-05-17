@@ -1,7 +1,51 @@
 개발 7일차
-막상 시작할려니깐 집중이 안된다. 내가 무엇을 해야 할 지 전혀 감이 안잡힌다. 이렇게 하나 두 ㄹ씩 적다보면서
+막상 시작할려니깐 집중이 안된다. 내가 무엇을 해야 할 지 전혀 감이 안잡힌다. 이렇게 하나 둘씩 적다보면서
 시작하면 오늘 할일을 적을 수 있을 것 같다. 어제 한일을 정리 해 보자. 눈이 좀 감긴다. 그래도 정리해 보자면,  
 대표적으로 생각나는 것은 프로파일을 만드는 작업이였다. 대략적으로 계정ㅇ프로파일정보를 불러오고, 프로파일을 수정하는 기능들을
 만들고 이를 테스트 하는 도중에 이것 저것이 막혀서 그만 뒀던걸로 기억한다. 그리고 아직 debounce에 대한 내 욕심이 남아 있다.
 정확히 말하면 debounce는 해결 됬지만 이것으로 rules에 적용 시키는 것이 잘 안되서 아쉽다. 일단 오전 내에서는 rules를 
 만드는 작업을 시작할 것이다. 잠깐 vue에 대해 잊어먹은게 있어서 적어 놓는다. v-bind:method -> :method, v-on:method -> @method
+이 밎힌 3일동안 날 괴롭혔던 문제가 풀렸다. 지난번에 했던 작업들을 되돌아 보니깐 결국 rules에 들어간 변수의 값이 동기화가 안되면서
+값이 변화하지 않는다는 걸 알았다. 문제를 알았으니 그것에 대한 검색을 해보니 이렇게 저렇게 하라는 것들이 보여서 문제 대한 대답과
+홈페이지에 있는 watch debounce 사용 방법 내가 만들어 놓은 메소드들을 조합하여 문제를 해결 할 수 있었다. 몇가지 수정할 사항만
+수정하고 이작업을 넘길 수 있겠다. 이메일 확인을 위한 fetch 시간을 프로그래스 바를 추가 할 예정이다. 프로그레스 바 추가하는데
+시간 얼마 안걸릴 줄 알았는데 마음대로 적용이 안된다. 홈페이지에 있는 메뉴얼을 그대로 활용했는데도, 뭔가 문제가 있는것 같다.
+변수 제어가 안된다. custom이라는 변수를 false, true로 바꿀려고 해도 바뀌지 않는다. 이유를 도통 모르겠다. 그냥 넘어가자.
+loadProfile에 성공하였다. full authentication~이라 하는 에러를 보고 다시 살펴보니 header에 jwt를 넣지 않았다. 
+이번엔 editProfile이 되지 않는다. 생성자로 파라미터를 두개만 넣게 만들었는데 이게 문제 인 것같다. updataAt만 수정이 된다.
+생성자를 수정하니깐 제대로 들어가진다. 수정 됬다는 알람과 함께 페이지를 다시 불러 오거나 하고 싶다. 일단 vue router 방향으로
+접근해 보기로 하였다. router로 접근하는데 잘 안된다. 밑에다가 시도했던 것들을 적겟다. 이다음 setting으로 넘어갈까 했는데
+뭘 setting으로 할지도 잘 모르겠고 해서 profile에 아바타 추가를 먼저 하기로 하였다. 우선 테스트용 아바타 이미지부터 만들자.
+다음 파일 업로드 다운로드이다. https://www.callicoder.com/spring-boot-file-upload-download-rest-api-example/를 참고해서
+프로젝트에 적용하고 있다. 첫 실행 결과는 역시 fail 오류 로그를 살펴 보니  java.nio.file.AccessDeniedException: C:\Users\callicoder와
+Could not create the directory where the uploaded files will be stored.가 있다. 접근 거부 예외라고 적혀 있지만 이 폴더를 찾지
+못해서 발생한 오류 일 수 있다. 아직 폴더를 만들지 않아서 그런 거 일지도. 설정한 폴더 위치에 폴더를 만든 후 다시 실행해 보았다.
+진짜 접근 권한이 없어서 못하는 것 같다. 다른 방법을 찾아봐야겠다. /uploads로 폴더를 만들고 실행하니 이건 권한이 되는지 정상 실행 되었다.
+postman으로 파일 업로드가 되는지 확인 해 보겠다. 아 시큐리티 권한 풀고 다시 실행 시켜야 한다. 와 된다. C:\uploads에 업로드한 파일이 보인다. 
+springframework 대단하다. 내가 대학생이였을 때 c로 파일업다운로드를 구현해 보겠다가 들어갔다. 박살나서 그만 뒀던게 떠오른다. 
+그 어렵던게 이렇게 쉽게 가능하다니. 통신에 대한 결과 값을 아래에 남기겠다. 이제 front에서 구현해 보겠다. front에서 최대한 grid 시스템을
+이용해 볼려고 하는데 어떤 조건에서 위아래로 갈라졌다가 한줄로 합쳐졌다가 하는지 모르겠다. 답은 v-layout 안에 두개의 카드가 있으면 row wrap을 넣어
+사용한다. 아 돌겟다 이것땜에 시간 너무 버렸다. 원래라면 사진 업로드 만들었을텐데 이쯤 마무리하고 다음주에 할 걸 적자. 다음주면 분명 잊어먹을테니
+오늘 사진 올릴 공간을 만들었습니다. 근데 옮겨야 될 것 같습니다. 위치가 맘에 안듭니다. 아니면 사진을 디빵 크게 만들어서 옆에 프로파일 카드랑
+크기가 같게 만들면 될듯. 그리고 사진 업로드 창을 팝업할 버튼 하나가 필요합니다. 파일 찾기 해서 올리면 스낵바로 프로파일 변경을 알리면서
+화면이 새로고침 전체 화면 말고 딱 필요한 화면만 새로고침 됬으면 좋겠습니다. 뭔가 누군가에게 인수인계하는 것 같아서 저절로 말투가 공손해집니다.
+이상입니다.
+
+
+{
+    "fileName": "망연계 오류.txt",
+    "fileDownloadUri": "http://localhost:8080/downloadFile/%EB%A7%9D%EC%97%B0%EA%B3%84%20%EC%98%A4%EB%A5%98.txt",
+    "fileType": "text/plain",
+    "size": 112
+}
+
+          <v-btn color='primary' :disabled='!valid' @click='reload'>Reload</v-btn>
+ reload () {
+      // this.$router.push('/profile') // not function
+      // this.$router.go(0) // not function
+      // windows.history.go() // windows undefined
+      // location.reload()// all reload
+      // this.$router.reload()// not function
+      // this.$route.router.go(this.$route.path) // go undefined
+      console.log('reload')
+    },

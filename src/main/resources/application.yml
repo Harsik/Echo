@@ -29,6 +29,12 @@ spring:
         time-zone: UTC
         serialization:
             WRITE_DATES_AS_TIMESTAMPS: false
+    servlet:
+        multipart:
+            enabled: true
+            file-size-threshold: 2KB
+            max-file-size: 200MB
+            max-request-size: 215MB
         
 logging:
     level:
@@ -37,9 +43,13 @@ logging:
             # web: always
         org:
             springframework:
-                security: debug
+                # security: debug
                 hibernate:
                     SQL: debug
 app:
     jwtSecret: JWTSuperSecretKey
     jwtExpirationInMs: 604800000
+    
+file:
+    # upload-dir: /Users/Archivsoft/uploads
+    upload-dir: /uploads

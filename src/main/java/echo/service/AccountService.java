@@ -50,7 +50,6 @@ public class AccountService implements UserDetailsService {
         account.setCompany(profilePayload.getCompany());
         account.setAddress(profilePayload.getAddress());
         account.setUpdateAt(LocalDateTime.now());
-        
         return accountRepository.save(account);
     }
     

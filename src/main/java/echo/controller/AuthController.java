@@ -74,7 +74,7 @@ public class AuthController {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"), HttpStatus.BAD_REQUEST);
         }
         // Creating user's account
-        Account accont = new Account(signRequest.getEmail(), signRequest.getPassword());
+        Account accont = new Account(signRequest.getEmail(), signRequest.getPassword(), null, null, null, null);
 
         accont.setPassword(passwordEncoder.encode(accont.getPassword()));
 

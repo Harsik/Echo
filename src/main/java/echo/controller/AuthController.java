@@ -2,6 +2,7 @@ package echo.controller;
 
 import echo.exception.AppException;
 import echo.model.Account;
+import echo.model.Profile;
 import echo.model.Role;
 import echo.model.RoleName;
 import echo.payload.ApiResponse;
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 import java.net.URI;
+import java.time.LocalDateTime;
 import java.util.Collections;
 
 @RestController
@@ -74,15 +76,22 @@ public class AuthController {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"), HttpStatus.BAD_REQUEST);
         }
         // Creating user's account
-        Account accont = new Account(signRequest.getEmail(), signRequest.getPassword(), null, null, null, null);
+        Account accont = new Account(signRequest.getEmail(), signRequest.getPassword());
 
         accont.setPassword(passwordEncoder.encode(accont.getPassword()));
 
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new AppException("Account Role not set."));
-
+        
         accont.setRoles(Collections.singleton(userRole));
 
+        Profile profile = new Profile();
+        profile.setCreatedAt(LocalDateTime.now());
+        profile.setUpdatedAt(LocalDateTime.now());
+
+        accont.setProfile(profile);
+        accont.setCreatedAt(LocalDateTime.now());
+        accont.setUpdatedAt(LocalDateTime.now());
         Account result = accountRepository.save(accont);
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/accounts/{email}")

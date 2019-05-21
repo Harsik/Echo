@@ -1,0 +1,52 @@
+개발 8일차
+비 오고 나서 몸이 안좋다. 편도선도 부은게 감기 몸살기가 살살 오는 것 같다. 오늘 점심은 따뜻한걸로 먹어야지
+앱을 한번 실행 시켜서 오늘 할일이 뭔지 떠올렸다. 프로파일에 아바타를 추가하는 것 이것만 보면 단순해 보이지만
+이미지 파일을 업로드하고 불러오고 그것에 대한 파일 시슷템을 구축하는것이라 조금 난이도가 있다. 이것이
+오늘 내가 할 일이 되리 먼저 이미지 파일을 업로드하는 것부터 구현을 해야겠다. 백엔드에서는 기능을 구현했고
+포스트맨을 통한 테스트가 끝났다. 코드좀 보면서 이해도 할겸 프론트에서 기능 구현 및 테스트를 해야한다.
+프론트에서 사진이 보여지는 것까지는 했다 하지만 하면서 너무 난잡해져서 db 구조를 좀 변경해야 할 것 같다. 
+profile 테이블을 생성하고 외부키를 유저 id로 걸어서 데이터를 불러오는 형식으로 변경할려고 한다.
+우선 엔티티들 부터 구상해야한다. 새로운 class를 추가하자. 아 젠장 여기서부터 난이도가 상승한다. 어떻게 해야하는거지?
+룰 작성했던것을 그대로 참고하기로 하였다. 아니다 고민해보니 앞으로 추가할 것들을 생각해보면 이 구조는 매우 비효율적이다.
+유저를 외래키로 둘 테이블이 늘어나면 왜래키의 정보를 저장할 테이블을 또 추가해야 하지 않는가. db 구조부터 다시 짜야겠다.
+룰 같은 경우 다대다 관계이기 때문에 중간에 관계 값을 저장 할 수 있는 테이블을 따로 두는 것이 효율적이라 생각한다.
+프로파일 경우에는 다대다 관계가 아닌 일대일 관계이기 때문에 테이블을 따로 두는 것이 아닌 둘 중 하나의 테이블에 외래키를 
+저장하는 것이 올바르다고 생각된다. 일대일 관계를 만들려고 하니 궁금한 점이 있다. 그럼 외래키는 어느 테이블에 저장하는 것이
+효율적인가 상하위 관계로 봤을때 위인가 아래인가? jpa에 이렇게 많은 기능이 있었나? @OneToOne, @ManyToOne, @OneToMany, @ManyToMany,
+@JoinTable, @JoinColumn 등등 db상에서 관계 설정을 위한 어노테이션이 많았다. 테이블과 관계 기본키와 외래키를 설정할려하니 머리가 
+복잡하다. 다른 것들은 repository는 또 어떻게 설정하는것인가? 어떻게 account profile 간만 설정하고 profile의 repository 테스트를
+들어갈려고 하니 톰캣 실행중에 에러가 발생한다.  Unknown mappedBy in: echo.model.Account.profile, referenced property unknown: echo.model.Profile.accounts
+이게 주된 에러 같다. 살펴 보면 profile안에 accounts를 알수 없다는 건데 어노테이션을 더 추가해야하는 것 같다. 와나 ㅋㅋㅋ
+처음에 참고했던 Baeldung 에서는 부모에게 JoinColumn을 선언하도록 되있어서 이걸로 했는데 안됬다. 그런데 Callicoder에서는
+자식에게 JoinColumn을 선언하도록 되있어서 이걸로 했더니 됬다. 하참 허탈하다. 되긴 됬지만 콘솔쪽에서 무언가 오류가 난다. 
+json에서 무한 루틴이 일어난다는 내용인데 해결방법을 찾아야겠다. @JsonBackReference 어노테이션을 추가시켜 해결하였다.
+그리고 db구조가 변경되서 프로파일 로드 부분을 다시 만들어야 한다.
+프로파일 로드부분을 만들었다 재밌게도 jparepository가 account안에 profile까지 검색해 찾아 객체로 생성했다는 것이다. 그래서 
+profile repository를 사용할 필요가 없었다. 이제 프로파일을 edit하는 작업이다. payload가 정상적으로 전송되는 것은 확인했으나
+기본키가 중복된다는 로그가 뜬다. 아래에 통신응답을 남긴다. 로그만 봐서는 뭔지 알 수 없다. UK_16u75sdu73ex3c5se987o39la 
+아 찾았다.profile table index에 있는 것이였다. account에서 setprofile을 하면 profile을 새로 insert하는 것 같다. 그래서
+unique속성인 account_id가 중복되면서 이러한 오류가 발생하는 것이였다. profile을 새로 생성하지 않고 수정하는 방법을 찾아봐야겠다.
+어떻게 할지 대충 떠올랐다. profile은 account 생성시 생성 후 edit 할일이 있을때 profile repository를 사용하여 수정하는 것이다.
+하 결국 이 방법 성공했다. setprofile로는 다른 방법을 찾기가 어렵다. 망할 profile을 account에게서 때어내고 구조 재작업 하는 것만
+시간이 반하루가 다 갔다. 드디어 본론으로 들어가서 아바타를 변경할 시간이다. db구조를 어떻게 해야할지 고민중이다. avatar를 새로운
+테이블로 만들고 account에 연결 시킬까? profile에 연결시킬까? avatar의 file info 들은? 새로운 table로 만들 것이고 avatar는 file_id
+로 file table에 접근 할 것이다. file table 새로 만들고 avatar는? table을 새로 만들까 말까? 어차피 avatar는 file_id와 동일 할 것이다.
+profile에 column 하나 추가하고 file table과 연결 시키자. 여기서 부터 file 관련이라 매우 복잡해진다. file table repository service등 
+모두 주의 깊게 보면서 작업해야할 것이다. 우선 작업 할 것은 db에 저장할 entity를 구성하는 일이다. 이것부터 차례대로 시작하자. 이따가
+file entity작성을 마치고 관계설정에서 profile entity를 작업하다가 계정 하나에 파일 하나만 연결 할 건 아닌데 라고 생각했다가
+profile과 연결 될 수 있는 파일은 avatar 파일 하나면 되므로 1:1 관계로 설정하고 진행하기로 하였다. 잠깐 테스트를 위해 서버를 기동했는데
+오류가 나온다.Error executing DDL "alter table account_roles add constraint FK61h48dsir3h82pxbq3cwgp0ce foreign key (account_id) references accounts (id)" via JDBC Statement
+외래키 설정을 잘못 건들여서 그런듯 싶다. account_id쪽은 해결했는데 file_id쪽은 해결을 못했다. 내일 마저 해보자
+
+
+
+{timestamp: "2019-05-20T06:21:44.756+0000", status: 500, error: "Internal Server Error",…}
+error:"Internal Server Error"
+message:"could not execute statement; SQL [n/a]; constraint [UK_16u75sdu73ex3c5se987o39la]; 
+nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement"
+path:"/api/account/profile/edit"
+status:500
+timestamp:"2019-05-20T06:21:44.756+0000"
+trace:"org.springframework.dao.DataIntegrityViolationException: could not execute statement; SQL [n/a]; 
+constraint [UK_16u75sdu73ex3c5se987o39la];
+ nested exception is org.hibernate.exception.ConstraintViolationException: could not execute statement

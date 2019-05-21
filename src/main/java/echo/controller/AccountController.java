@@ -1,6 +1,7 @@
 package echo.controller;
 
 import echo.model.Account;
+import echo.model.Profile;
 import echo.payload.*;
 import echo.repository.AccountRepository;
 import echo.service.AccountService;
@@ -34,21 +35,20 @@ public class AccountController {
 
     @PostMapping("/profile")
     @PreAuthorize("hasRole('USER')")
-    public Account loadProfile(@RequestBody SignRequest signRequest) {
+    public Profile loadProfile(@RequestBody SignRequest signRequest) {
+        Profile profile = accountService.loadProfile(signRequest);
 
-        Account account = accountService.loadProfile(signRequest);
-
-        return account;
+        return profile;
     }
 
     @PostMapping("/profile/edit")
     @PreAuthorize("hasRole('USER')")    
     public ResponseEntity<?> editProfile(@RequestBody ProfilePayload profilePayload) {
 
-        Account account = accountService.editProfile(profilePayload);
+        Profile profile = accountService.editProfile(profilePayload);
 
         //TODO: process POST request
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{accountId}").buildAndExpand(account.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{accountId}").buildAndExpand(profile.getId())
                 .toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "Profile edited Successfully"));

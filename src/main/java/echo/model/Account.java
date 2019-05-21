@@ -52,6 +52,10 @@ public class Account {
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
     private Profile profile;
 
+    // @ManyToMany(fetch = FetchType.LAZY)
+    // @JoinTable(name = "account_files", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "file_id"))
+    // private Set<ServerFile> serverFiles = new HashSet<>();
+
     @CreationTimestamp
     private LocalDateTime createdAt;
 

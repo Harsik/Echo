@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
+import javax.persistence.Lob;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
@@ -20,7 +21,9 @@ import javax.validation.constraints.Email;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
+import org.aspectj.weaver.AjAttribute.PrivilegedAttribute;
 import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Getter;
@@ -32,35 +35,25 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor()
+@NoArgsConstructor
 @Table(name = "files")
-public class File {
+public class DBFile {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY) // 스프링 2.0이상 부터 GenerationType.AUTO에 문제가 있어 IDENTITY로 수정
-    private Long id;
+    @GeneratedValue(generator = "uuid")
+    @GenericGenerator(name = "uuid", strategy = "uuid2")
+    private String id;
 
     private String fileName;
 
-    private String fileDownloadUri;
-
     private String fileType;
 
-    private String size;
-
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "file")
-    private Profile profile;
-
-    @CreationTimestamp
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    public File(String fileName, String fileDownloadUri, String fileType, String size) {
+    @Lob
+    private byte[] data;
+    
+    public DBFile(String fileName, String fileType, byte[] data) {
         this.fileName = fileName;
-        this.fileDownloadUri = fileDownloadUri;
         this.fileType = fileType;
-        this.size = size;
+        this.data = data;
     }
 }

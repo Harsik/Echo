@@ -31,6 +31,8 @@ import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
+
+import java.io.File;
 import java.net.URI;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -85,13 +87,19 @@ public class AuthController {
         
         accont.setRoles(Collections.singleton(userRole));
 
-        Profile profile = new Profile();
-        profile.setCreatedAt(LocalDateTime.now());
-        profile.setUpdatedAt(LocalDateTime.now());
+        // Profile profile = new Profile();
+        // profile.setCreatedAt(LocalDateTime.now());
+        // profile.setUpdatedAt(LocalDateTime.now());
 
-        accont.setProfile(profile);
-        accont.setCreatedAt(LocalDateTime.now());
-        accont.setUpdatedAt(LocalDateTime.now());
+        // ServerFile serverFile = new ServerFile();
+        // serverFile.setCreatedAt(LocalDateTime.now());
+        // serverFile.setUpdatedAt(LocalDateTime.now());
+        
+        // profile.setServerFile(serverFile);
+
+        // accont.setProfile(profile);
+        // accont.setCreatedAt(LocalDateTime.now());
+        // accont.setUpdatedAt(LocalDateTime.now());
         Account result = accountRepository.save(accont);
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/accounts/{email}")

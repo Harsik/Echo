@@ -26,7 +26,7 @@ public class AccountController {
 
     @Autowired
     private AccountRepository accountRepository;
-
+    
     @GetMapping("/checkEmailAvailability")
     public AccountIdentityAvailability checkEmailAvailability(@RequestParam(value = "email") String email) {
         Boolean isAvailable = !accountRepository.existsByEmail(email);

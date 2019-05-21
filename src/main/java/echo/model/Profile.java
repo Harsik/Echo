@@ -1,6 +1,10 @@
 package echo.model;
 
 import java.time.LocalDateTime;
+import java.util.HashSet;
+import java.util.Set;
+
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,6 +13,8 @@ import javax.persistence.Id;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
+import javax.persistence.JoinTable;
+import javax.persistence.ManyToMany;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 
@@ -22,7 +28,7 @@ import lombok.NoArgsConstructor;
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor()
+@NoArgsConstructor
 @Table(name = "profiles")
 public class Profile {
 
@@ -40,12 +46,12 @@ public class Profile {
 
     @JsonBackReference
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "account_id", nullable = false)
+    @JoinColumn(name = "account_id", nullable = true)
     private Account account;
 
-    @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "file_id", nullable = true)
-    private File file;
+    @ManyToMany(fetch = FetchType.LAZY)
+    @JoinTable(name = "profile_dbfiles", joinColumns = @JoinColumn(name = "profile_id"), inverseJoinColumns = @JoinColumn(name = "dbfile_id"))
+    private Set<DBFile> dbFiles = new HashSet<>(); // 다중 권한 부여 가능 하도록 HashSet 사용
 
     @CreationTimestamp
     private LocalDateTime createdAt;

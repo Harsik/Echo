@@ -53,13 +53,12 @@ public class AccountService implements UserDetailsService {
     public Profile editProfile(ProfilePayload profilePayload) {
         Account account = accountRepository.findByEmail(profilePayload.getEmail()).orElseThrow(
                 () -> new UsernameNotFoundException("Account not found with email : " + profilePayload.getEmail()));
-        
-        Profile profile = account.getProfile();
+        System.out.println(profilePayload);
+        Profile profile = account.getProfile(); // 처음 계정 생성 후 프로파일 저장 할 때에는 불러올 수 있는 프로파일이 없기 때문에 null 에러가 발생
         profile.setName(profilePayload.getName());
         profile.setBio(profilePayload.getBio());
         profile.setCompany(profilePayload.getCompany());
         profile.setAddress(profilePayload.getAddress());
-        profile.setUpdatedAt(LocalDateTime.now());
         
         return profileRepository.save(profile);
     }

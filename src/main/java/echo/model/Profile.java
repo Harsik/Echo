@@ -55,8 +55,8 @@ public class Profile {
     // @JoinTable(name = "account_files", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "file_id"))
     // private Set<FileInfo> fileInfos = new HashSet<>();
     
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "profile")
-    private FileInfo fileInfo;
+    // @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "profile")
+    // private FileInfo fileInfo;
 
     @CreationTimestamp
     private LocalDateTime createdAt;

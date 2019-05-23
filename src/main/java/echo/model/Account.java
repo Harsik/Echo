@@ -12,6 +12,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
+import javax.persistence.OneToMany;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.persistence.JoinColumn;
@@ -25,13 +26,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
-import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@NoArgsConstructor
 @Table(name = "accounts")
 public class Account {
 
@@ -51,10 +51,12 @@ public class Account {
     @JsonManagedReference
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
     private Profile profile;
-
-    // @ManyToMany(fetch = FetchType.LAZY)
+    
+    @OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
+    private Set<FileInfo> fileInfos;
+    // @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     // @JoinTable(name = "account_files", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "file_id"))
-    // private Set<ServerFile> serverFiles = new HashSet<>();
+    // private Set<FileInfo> fileInfo = new HashSet<>();
 
     @CreationTimestamp
     private LocalDateTime createdAt;

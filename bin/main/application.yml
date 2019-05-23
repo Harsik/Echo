@@ -42,10 +42,10 @@ logging:
         # springframework:
             # web: always
         org:
+            hibernate:
+                SQL: debug
             springframework:
                 # security: debug
-                hibernate:
-                    SQL: debug
 app:
     jwtSecret: JWTSuperSecretKey
     jwtExpirationInMs: 604800000

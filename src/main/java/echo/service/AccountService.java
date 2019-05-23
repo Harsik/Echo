@@ -56,25 +56,28 @@ public class AccountService implements UserDetailsService {
                 return AccountPrincipal.create(account);
         }
 
+        public FileInfo loadAvatar(String email) {
+                Account account = accountRepository.findByEmail(email).orElseThrow(
+                                () -> new UsernameNotFoundException("Account not found with email : " + email));
+                // FileInfo fileInfo = fileInfoRepository.findByAccountId(account.getId())
+                //                 .orElseThrow(() -> new UsernameNotFoundException("fileInfo not found with id : " + account.getId()));
+                return fileInfoRepository.findByAccountId(account.getId()).orElseThrow(
+                                () -> new UsernameNotFoundException("fileInfo not found with account_id : " + account.getId()));
+        }
+
         public void saveAvatar(String email, String name, String downloadUri, String type, Long size) {
                 Account account = accountRepository.findByEmail(email).orElseThrow(
                                 () -> new UsernameNotFoundException("Account not found with email : " + email));
-
-                Profile profile = profileRepository.findByAccountId(account.getId())
-                                .orElseThrow(() -> new UsernameNotFoundException(
-                                                "Profile not found with account_id : " + account.getId()));
-
-                // FileInfo fileInfo = fileInfoRepository.save(new FileInfo(name, downloadUri,
-                // type, size));
-                // profile.setFileInfos(Collections.singleton(fileInfo));
-                // if(profile.getFileInfos() != null) {
-                // profile.getFileInfos().clear();
-                // }
-
-                // FileInfo fileInfo = new FileInfo(name, downloadUri, type, size);
-                // profile.setFileInfos(Collections.singleton(fileInfo));
-
-                profileRepository.save(profile);
+                System.out.println(account);
+                // blo
+                // FileInfo fileInfo =
+                // fileInfoRepository.findByaccountId(account.getId()).orElseGet(
+                // () -> new FileInfo(name, downloadUri, type, "Avatar", size));
+                FileInfo fileInfo = fileInfoRepository.findByAccountId(account.getId()).orElseGet(() -> new FileInfo()); // account로 찾을 시 없으면 새로운 FileInfo 생성
+          
+                fileInfo.setAccount(account);
+                fileInfo = fileInfo.build(name, downloadUri, type, "Avatar", size); 
+                fileInfoRepository.save(fileInfo);
         }
 
         public Account createProfile(ProfilePayload profilePayload) {

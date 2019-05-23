@@ -1,5 +1,6 @@
 package echo.controller;
 
+import echo.model.FileInfo;
 import echo.payload.UploadFileResponse;
 import echo.service.AccountService;
 import echo.service.FileStorageService;
@@ -10,6 +11,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
@@ -31,16 +33,24 @@ public class FileController {
     @Autowired
     private AccountService accountService;
 
-    // @PostMapping("/uploadAvatar")
-    // public UploadFileResponse uploadAvatar(@RequestParam("file") MultipartFile file,
-    //         @RequestParam("email") String email) {
-    //     String fileName = fileStorageService.storeFile(file);
-    //     String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/file/downloadFile/")
-    //             .path(fileName).toUriString();
+    @GetMapping("/loadAvatar")
+    @PreAuthorize("hasRole('USER')")
+    public FileInfo loadProfile(@RequestParam(value = "email") String email) {
+        // FileInfo fileInfo = accountService.loadAvatar(email);
 
-    //     accountService.saveAvatar(email, fileName, fileDownloadUri, file.getContentType(), file.getSize());
-    //     return new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
-    // }
+        return accountService.loadAvatar(email);
+    }
+
+    @PostMapping("/uploadAvatar")
+    public UploadFileResponse uploadAvatar(@RequestParam("file") MultipartFile file,
+            @RequestParam("email") String email) {
+        String fileName = fileStorageService.storeFile(file);
+        String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/file/downloadFile/")
+                .path(fileName).toUriString();
+
+        accountService.saveAvatar(email, fileName, fileDownloadUri, file.getContentType(), file.getSize());
+        return new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
+    }
 
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {

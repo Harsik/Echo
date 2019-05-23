@@ -1,6 +1,5 @@
 package echo.model;
 
-import java.io.FileFilter;
 import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.Set;
@@ -22,7 +21,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.NoArgsConstructor;
@@ -31,8 +29,8 @@ import lombok.NoArgsConstructor;
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "profiles")
-public class Profile {
+@Table(name = "files")
+public class FileInfo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY) // 스프링 2.0이상 부터 GenerationType.AUTO에 문제가 있어 IDENTITY로 수정
@@ -40,23 +38,15 @@ public class Profile {
 
     private String name;
 
-    private String bio; // 간단한 자기소개
+    private String downloadUri; // 간단한 자기소개
 
-    private String company;
+    private String type;
 
-    private String address;
+    private Long size;
 
-    @JsonBackReference
     @OneToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "account_id", nullable = false)
-    private Account account;
-
-    // @ManyToMany(fetch = FetchType.LAZY)
-    // @JoinTable(name = "account_files", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "file_id"))
-    // private Set<FileInfo> fileInfos = new HashSet<>();
-    
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "profile")
-    private FileInfo fileInfo;
+    @JoinColumn(name = "file_id", nullable = false)
+    private Profile profile;
 
     @CreationTimestamp
     private LocalDateTime createdAt;
@@ -64,10 +54,10 @@ public class Profile {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    public Profile(String name, String bio, String company, String address) {
+    public FileInfo(String name, String downloadUri, String type, Long size) {
         this.name = name;
-        this.bio = bio;
-        this.company = company;
-        this.address = address;
+        this.downloadUri = downloadUri;
+        this.type = type;
+        this.size = size;
     }
 }

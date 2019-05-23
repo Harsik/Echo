@@ -88,18 +88,8 @@ public class AuthController {
         accont.setRoles(Collections.singleton(userRole));
 
         // Profile profile = new Profile();
-        // profile.setCreatedAt(LocalDateTime.now());
-        // profile.setUpdatedAt(LocalDateTime.now());
-
-        // ServerFile serverFile = new ServerFile();
-        // serverFile.setCreatedAt(LocalDateTime.now());
-        // serverFile.setUpdatedAt(LocalDateTime.now());
-        
-        // profile.setServerFile(serverFile);
-
         // accont.setProfile(profile);
-        // accont.setCreatedAt(LocalDateTime.now());
-        // accont.setUpdatedAt(LocalDateTime.now());
+
         Account result = accountRepository.save(accont);
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/accounts/{email}")

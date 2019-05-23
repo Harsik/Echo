@@ -33,10 +33,10 @@ public class AccountController {
         return new AccountIdentityAvailability(isAvailable);
     }
 
-    @PostMapping("/profile")
+    @GetMapping("/profile")
     @PreAuthorize("hasRole('USER')")
-    public Profile loadProfile(@RequestBody SignRequest signRequest) {
-        Profile profile = accountService.loadProfile(signRequest);
+    public Profile loadProfile(@RequestParam(value = "email") String email) {
+        Profile profile = accountService.loadProfile(email);
 
         return profile;
     }
@@ -45,10 +45,10 @@ public class AccountController {
     @PreAuthorize("hasRole('USER')")    
     public ResponseEntity<?> editProfile(@RequestBody ProfilePayload profilePayload) {
 
-        Profile profile = accountService.editProfile(profilePayload);
+        Account account = accountService.editProfile(profilePayload);
 
         //TODO: process POST request
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{accountId}").buildAndExpand(profile.getId())
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{accountId}").buildAndExpand(account.getId())
                 .toUri();
 
         return ResponseEntity.created(location).body(new ApiResponse(true, "Profile edited Successfully"));

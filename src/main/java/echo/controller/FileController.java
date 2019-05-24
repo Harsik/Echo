@@ -1,5 +1,6 @@
 package echo.controller;
 
+import echo.model.AvatarFileInfo;
 import echo.model.FileInfo;
 import echo.payload.UploadFileResponse;
 import echo.service.AccountService;
@@ -35,10 +36,8 @@ public class FileController {
 
     @GetMapping("/loadAvatar")
     @PreAuthorize("hasRole('USER')")
-    public FileInfo loadProfile(@RequestParam(value = "email") String email) {
-        // FileInfo fileInfo = accountService.loadAvatar(email);
-
-        return accountService.loadAvatar(email);
+    public AvatarFileInfo loadAvatar(@RequestParam(value = "email") String email) {
+        return accountService.loadAvatarByEmail(email);
     }
 
     @PostMapping("/uploadAvatar")
@@ -52,13 +51,18 @@ public class FileController {
         return new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
     }
 
+    @PostMapping("/loadFiles")
+    public List<FileInfo> loadFiles() {
+        return fileStorageService.loadFiles();
+    }
+
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
 
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/file/downloadFile/")
                 .path(fileName).toUriString();
-
+        fileStorageService.saveFileInfo(fileName, fileDownloadUri, file.getContentType(), file.getSize());
         return new UploadFileResponse(fileName, fileDownloadUri, file.getContentType(), file.getSize());
     }
 

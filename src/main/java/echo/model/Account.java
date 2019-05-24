@@ -26,12 +26,13 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.Builder;
+import lombok.AccessLevel;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 @Table(name = "accounts")
 public class Account {
 
@@ -51,9 +52,9 @@ public class Account {
     @JsonManagedReference
     @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "account")
     private Profile profile;
-    
-    @OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
-    private Set<FileInfo> fileInfos;
+
+    // @OneToMany(mappedBy = "account", cascade = CascadeType.PERSIST, orphanRemoval = true, fetch = FetchType.EAGER)
+    // private Set<FileInfo> fileInfos;
     // @ManyToMany(fetch = FetchType.LAZY, cascade = { CascadeType.PERSIST, CascadeType.MERGE })
     // @JoinTable(name = "account_files", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "file_id"))
     // private Set<FileInfo> fileInfo = new HashSet<>();

@@ -51,6 +51,9 @@ public class Profile {
     @JoinColumn(name = "account_id", nullable = false)
     private Account account;
 
+    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL, mappedBy = "profile")
+    private AvatarFileInfo avatarFileInfo;
+    
     // @ManyToMany(fetch = FetchType.LAZY)
     // @JoinTable(name = "account_files", joinColumns = @JoinColumn(name = "account_id"), inverseJoinColumns = @JoinColumn(name = "file_id"))
     // private Set<FileInfo> fileInfos = new HashSet<>();

@@ -12,11 +12,13 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import echo.model.Account;
+import echo.model.AvatarFileInfo;
 import echo.model.FileInfo;
 import echo.model.Profile;
 import echo.payload.ProfilePayload;
 import echo.payload.SignRequest;
 import echo.repository.AccountRepository;
+import echo.repository.AvatarFileInfoRepository;
 import echo.repository.FileInfoRepository;
 import echo.repository.ProfileRepository;
 import echo.security.AccountPrincipal;
@@ -32,6 +34,9 @@ public class AccountService implements UserDetailsService {
 
         @Autowired
         private FileInfoRepository fileInfoRepository;
+
+        @Autowired
+        private AvatarFileInfoRepository avatarFileInfoRepository;
 
         @Override
         @Transactional
@@ -56,28 +61,32 @@ public class AccountService implements UserDetailsService {
                 return AccountPrincipal.create(account);
         }
 
-        public FileInfo loadAvatar(String email) {
+        public AvatarFileInfo loadAvatarByEmail(String email) {
                 Account account = accountRepository.findByEmail(email).orElseThrow(
                                 () -> new UsernameNotFoundException("Account not found with email : " + email));
-                // FileInfo fileInfo = fileInfoRepository.findByAccountId(account.getId())
-                //                 .orElseThrow(() -> new UsernameNotFoundException("fileInfo not found with id : " + account.getId()));
-                return fileInfoRepository.findByAccountId(account.getId()).orElseThrow(
-                                () -> new UsernameNotFoundException("fileInfo not found with account_id : " + account.getId()));
+                Profile profile = account.getProfile();
+                return avatarFileInfoRepository.findByProfileId(profile.getId())
+                                .orElseThrow(() -> new UsernameNotFoundException(
+                                                "avatarFileInfo not found with profile_id : " + profile.getId()));
         }
 
         public void saveAvatar(String email, String name, String downloadUri, String type, Long size) {
                 Account account = accountRepository.findByEmail(email).orElseThrow(
                                 () -> new UsernameNotFoundException("Account not found with email : " + email));
-                System.out.println(account);
-                // blo
-                // FileInfo fileInfo =
-                // fileInfoRepository.findByaccountId(account.getId()).orElseGet(
-                // () -> new FileInfo(name, downloadUri, type, "Avatar", size));
-                FileInfo fileInfo = fileInfoRepository.findByAccountId(account.getId()).orElseGet(() -> new FileInfo()); // account로 찾을 시 없으면 새로운 FileInfo 생성
-          
-                fileInfo.setAccount(account);
-                fileInfo = fileInfo.build(name, downloadUri, type, "Avatar", size); 
-                fileInfoRepository.save(fileInfo);
+                Profile profile = account.getProfile();
+                AvatarFileInfo avatarFileInfo = profile.getAvatarFileInfo();
+                if (avatarFileInfo != null) {
+                        avatarFileInfo.setName(name);
+                        avatarFileInfo.setDownloadUri(downloadUri);
+                        avatarFileInfo.setType(type);
+                        avatarFileInfo.setSize(size);
+                        avatarFileInfoRepository.save(avatarFileInfo);
+                } else {
+                        AvatarFileInfo newAvatar = new AvatarFileInfo(name, downloadUri, type, size);
+                        profile.setAvatarFileInfo(newAvatar);
+                        newAvatar.setProfile(profile);
+                        profileRepository.save(profile);
+                }
         }
 
         public Account createProfile(ProfilePayload profilePayload) {

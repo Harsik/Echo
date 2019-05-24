@@ -6,11 +6,12 @@ import java.util.Set;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import echo.model.Account;
+import echo.model.AvatarFileInfo;
 import echo.model.FileInfo;;
 
-public interface FileInfoRepository extends JpaRepository<FileInfo, String> {
-    // Optional<FileInfo> findByAccountId(Long AccountId);
+public interface AvatarFileInfoRepository extends JpaRepository<AvatarFileInfo, String> {
+    Optional<AvatarFileInfo> findByProfileId(Long ProfileId);
     //  Set<FileInfo>  findByAccountId(Long AccountId);
 
-    // Boolean existsByAccountId(Long AccountId);
+    Boolean existsByProfileId(Long ProfileId);
 }

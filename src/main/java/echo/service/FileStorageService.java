@@ -2,12 +2,17 @@ package echo.service;
 
 import echo.exception.FileStorageException;
 import echo.exception.MyFileNotFoundException;
+import echo.model.Account;
+import echo.model.FileInfo;
 import echo.property.FileStorageProperties;
+import echo.repository.AccountRepository;
 import echo.repository.FileInfoRepository;
+import echo.payload.UploadFileResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -17,6 +22,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
+import java.util.List;
 
 @Service
 public class FileStorageService {
@@ -25,6 +31,9 @@ public class FileStorageService {
 
     @Autowired
     private FileInfoRepository fileInfoRepository;
+
+    @Autowired
+    private AccountRepository accountRepository;
 
     @Autowired
     public FileStorageService(FileStorageProperties fileStorageProperties) {
@@ -36,6 +45,15 @@ public class FileStorageService {
             throw new FileStorageException("Could not create the directory where the uploaded files will be stored.",
                     ex);
         }
+    }
+
+    public List<FileInfo> loadFiles() {
+        return fileInfoRepository.findAll();
+    }
+
+    public void saveFileInfo(String name, String downloadUri, String type, Long size) {
+        FileInfo fileInfo = new FileInfo(name, downloadUri, type, size);
+        fileInfoRepository.save(fileInfo);
     }
 
     public String storeFile(MultipartFile file) {

@@ -89,24 +89,6 @@ public class AccountService implements UserDetailsService {
                 }
         }
 
-        public Account createProfile(ProfilePayload profilePayload) {
-                String name = profilePayload.getName();
-                String bio = profilePayload.getBio();
-                String company = profilePayload.getCompany();
-                String address = profilePayload.getAddress();
-
-                Account account = accountRepository.findByEmail(profilePayload.getEmail())
-                                .orElseThrow(() -> new UsernameNotFoundException(
-                                                "Account not found with email : " + profilePayload.getEmail()));
-
-                Profile profile = new Profile(name, bio, company, address);
-
-                account.setProfile(profile);
-                profile.setAccount(account);
-
-                return accountRepository.save(account);
-        }
-
         public Account editProfile(ProfilePayload profilePayload) {
                 String name = profilePayload.getName();
                 String bio = profilePayload.getBio();
@@ -116,12 +98,17 @@ public class AccountService implements UserDetailsService {
                 Account account = accountRepository.findByEmail(profilePayload.getEmail())
                                 .orElseThrow(() -> new UsernameNotFoundException(
                                                 "Account not found with email : " + profilePayload.getEmail()));
-                // Profile profile =
-                // profileRepository.findByAccountId(account.getId()).orElseThrow(
-                // () -> new UsernameNotFoundException("Profile not found with id : "
-                // +account.getId()));
-
-                Profile profile = new Profile(name, bio, company, address);
+                Profile profile = new Profile();
+                if(profileRepository.existsByAccountId(account.getId())) {
+                profile = profileRepository.findByAccountId(account.getId())
+                                        .orElseThrow(() -> new UsernameNotFoundException(
+                                                        "Profile not found with id : " + account.getId()));
+                }
+                
+                profile.setName(name);
+                profile.setBio(bio);
+                profile.setCompany(company);
+                profile.setAddress(address);
 
                 account.setProfile(profile);
                 profile.setAccount(account);

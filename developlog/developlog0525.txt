@@ -1,0 +1,96 @@
+개발 13일차
+벌써 5월 말이다. 5월 들어온게 엊그제 같은데 시간이 이렇게나 지나 버렸다. 편도염을 처음 걸렸을 때 보단 덜 아프지만
+그래서 목이 아픈건 여전하다. 약이 다 떨어져서 점심 때 병원 한 번 갔다 와야 겠다. 다행히도 프로폴리스 스프레이라는게
+있어 목에 염증 통증을 가라 앉혀주고 있고 있다. 뜨거운 물이 정말 목에 좋은 건가?
+mysql에서 한글이 호환이 안 되는 건지 아니면 java에서 문제가 있는 건지 알아봐야한다. 저번에 파일 업로드 했을떄
+파일명이 한글이면 ?로 찍혀 버리는 문제가 있었다. 한글 insert시 발생하는 문제가 있다고 한다.
+이 문제 해결을 위해서는 default character set을 utf8로 변경해 주면 깨끗이 해결된다고 써있다.
+스키마에서 변경했는데도 안된다면 테이블도 변경해야 한다고 한다. 아 뭐지 그래도 안된다. 구글링을 더 해보니
+utf8가 아닌 euckr로 해보라는 글이 있어 해본다. 그래도 안된다. 좀 더 살펴보니 인코딩도 여러 부분에서 단편적으로
+적용되 있는 걸 확인 할 수 있었다. 내 db는 아직 latin으로 인코딩되 있어 utf8로 변경해야한다고 한다. 하 돌겠다.
+mysql workbench로도 모잘라서 오랜만에 hyper v로 들어가 mylsql 의 config file을 수정하는 작업까지 마쳤는데
+별별 이상한 오류들이 터져서 심지어 mysql이 제대로 작동하지 않는 현상까지 벌어진다. 좀 더 문제를 파악할 시간이
+필요한것 같다. db인코딩을 utf8으로도 바궜지만 각 계정에 할당되어 있는 스키마에서까지는 바뀌지 않는 듯 하다.
+그래서 계정을 접속하려고 하는데 뭐가 문제인지 몰라도 패스워드가 틀렸다고 한다. 접속 아이피에 따라 비밀번호가 
+다를 수 있다는 제타위키 글을 보고 putty로도 들어가봐서 접속해볼려고 했지만 안된다. root로 접속해서 
+계정정보가 어떤지 확인해 보니 그제서야 떠올랐다. 내가 계정 생성할때 어느 접속 경로든 같은 비밀번호를 적용하도록
+만들었다는 것을 지금 비밀번호를 변경할 생각을 하고 있다. 하지만 workbench로도 java로도 접속이 잘만 되는데
+왜 서버에서는 접속이 안될까? 하 왜 안되는지 모르겠다. 이 문제는 잠시 접어두자. 아 몰라 껏다 켜보자.
+이거 방법을 찾아야 내 프로젝트가 진행이 될 수 있을 것 같다. 지금의 선결 과제로 삼고 문제를 처리할 수 있도록 하자.
+계정의 비밀번호를 변경 했는데도 접속이 안된다. 이건 비밀번호 이전의 문제 인것 같다. 도대체 어떤 문제일까?
+계정을 삭제하고 다시 생성하기로 하였다. 계정을 새로 만들고 mysql로 db에 접속 해서 client characterset을 수정하였지만
+workbench에서는 여전히 한글이 입력되지 않았다. 이게 어떻게 된일인가. 내가 할 수 있는 거의 모든 걸 다 해 봤지만 
+여전히 한글 입력이 되지 않는다. 아 이런 세상에 table characterset마저 euckr인데도 한글 입력이 안된다. update는
+물론 insert도 되지 않는다. 이게 이게 무슨 어떻게 해결하라는 말인가?
+허탈하다 되긴 됬다. euckr이 아닌 utf8으로 여태까지 utf8으로 시도한 적이 없었나 보다 콘솔로 입력 할때는 입력이 이상하게
+되지만 workbench로 제대로 된다. utf8_general_ci 이게 답인 것 같다. utf8_bin 일때는 입력 되지 않았다.
+이제 한글 입력이 제대로 된다. 좋아 정리 하자.
+문제 : mysql 한글입력이 안된다.
+해결 : 계정으로 접속해 set character set euckr; 그리고 use [db name], alter database [db name] default character set utf8;
+       그리고 alter table [table name] character set utf8; show table status로 characterset이 utf8_general_ci인지 확인
+       
+이 다음은 업로드와 파일리스트를 만들었으니 다운로드를 만들 차례이다. 먼저 쓸 때 없이 길어서 지저분 해 보이는 uri, update, create를 
+data table 에서 지우겠다. 그리고 현재 사용하고 있는 다운로드 방법이 파일 명을 찾아 가는 것이라 중복 문제가 생긴다. 그래서 
+파일 테이블에서 아이디로 같이 보내 data table 안에 숨겨 놓도록 하겠다. 그리고 나중에 이 아이디로 uri를 받아오는 것이다. 
+구조가 생각보다 복잡해서 개선 작업을 거치거나 아니면 기존 방식을 그대로 써야되는데 어차피 연습과정이니 기존 방식을 사용하도록 하겠다.
+기존 방식을 다시 살펴보니 uri 파싱이 되어 있어 개체가 unique성을 갖는다. 바인드 링크를 걸어 파일명을 누르면 다운로드가 되도록 하였다.
+filelist의 기초적인 기능은 구현 되었다. 오늘은 추가할 기능들을 생각하고 만들는 것을 시도해 보고 setting의 기능을 무엇을 할지 
+고민하는 것으로 나머지 시간을 보내겠다. 내일은 생각해놓은 setting의 기능을 구현하는 것을 목표로 하겠다. avatar_file_info쪽은 
+한글 입력이 잘 됬는데 무슨 문제인지는 몰라도 profile쪽은 한글입력이 안된다. front에서 전달값이 잘못되게 전달되는 것인가?
+profile쪽에 characterset이 초기화 됬는지 다시 적용 시키니 한글 입력이 된다.
+files table을 다시 보니깐 uri 파싱된 것이 아니라 한글이 변경된 것이였다. 아마 같은 파일명으로 문제가 생기리. 파일명이 기본키가 되어서
+같은 파일명이면 file 만 늘어나고 upload파일은 그대로 하나였다. 아니면 덮어씌어진 건가? 덮어씌어진 것이 맞다. 이제 정책을 정해야한다.
+같은 파일명을 허용할 지 말지를 지금 upload 방식은 기존 파일시스템을 그대로 사용함으로 같은 파일명을 사용 할 수 없다. 그러므로 나도
+같은 파일명을 사용 할 수 없도록 만들어야한다. 좋아 됬다. name의 속성을 unique를 넣었고 그에 따라서 function을 수정하였다. 이제
+파일명을 찾아서 수정하도록 변경 되었다. 좋아 이제 추가 기능들을 정리해보자. 페이징 기능을 좀더 향상된 ui로 만들것, 정렬 기준을 이름이 아닌
+updataAt기준으로 맞출 것, 삭제 기능을 추가할 것 당장 떠오르는 것은 이 세개이다. 그건 내일 해 보도록 하고 setting 기능을 무엇을 할 지 생각해보자
+역시 당장 떠오르는 것은 app 테마를 dark 로 전환할 수 있는 기능이다. 그 밖에 가능한 것들을 찾아보자. 언어변경? 이건 정말 쓸일 없을 것이다.
+최근 사용자의 email을 저장 할지 말지를 어 그러니깐 자동 로그인 기능을 사용할 지 말지, 계정 삭제 기능, 만약 트레이 기능을 구현하게 된다면
+종료 버튼을 누를 시 트레이 상태로 들어갈지 아니면 바로 종료 할지, 마켓앱을 참고해서 그런지 정보 수신 여부를 결정하는 것이 반이상이라 
+적을 수 있는게 이정도 인것 같다. 깃 허브도 옵션이 정말 적다.
+
+mysql> show table status;
++------------------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+-------------+------------+-----------------+----------+----------------+---------+
+| Name             | Engine | Version | Row_format | Rows | Avg_row_length | Data_length | Max_data_length | Index_length | Data_free | Auto_increment | Create_time         | Update_time | Check_time | Collation       | Checksum | Create_options | Comment |
++------------------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+-------------+------------+-----------------+----------+----------------+---------+
+| account_roles    | InnoDB |      10 | Compact    |    2 |           8192 |       16384 |               0 |        16384 |         0 |           NULL | 2019-05-27 14:27:04 | NULL        | NULL       | utf8_general_ci |     NULL |                |         |
+| accounts         | InnoDB |      10 | Compact    |    2 |           8192 |       16384 |               0 |            0 |         0 |              3 | 2019-05-27 14:27:17 | NULL        | NULL       | utf8_general_ci |     NULL |                |         |
+| avatar_file_info | InnoDB |      10 | Compact    |    0 |              0 |       16384 |               0 |        16384 |         0 |              2 | 2019-05-24 03:35:02 | NULL        | NULL       | euckr_korean_ci |     NULL |                |         |
+| files            | InnoDB |      10 | Compact    |    0 |              0 |       16384 |               0 |            0 |         0 |              3 | 2019-05-24 03:35:10 | NULL        | NULL       | euckr_korean_ci |     NULL |                |         |
+| profiles         | InnoDB |      10 | Compact    |    1 |          16384 |       16384 |               0 |        16384 |         0 |              3 | 2019-05-27 14:29:52 | NULL        | NULL       | euckr_korean_ci |     NULL |                |         |
+| roles            | InnoDB |      10 | Compact    |    3 |           5461 |       16384 |               0 |            0 |         0 |              4 | 2019-05-24 03:36:00 | NULL        | NULL       | euckr_korean_ci |     NULL |                |         |
++------------------+--------+---------+------------+------+----------------+-------------+-----------------+--------------+-----------+----------------+---------------------+-------------+------------+-----------------+----------+----------------+---------+
+6 rows in set (0.00 sec)
+
+mysql> select * from profiles;
++----+---------+------+---------+------+------------+---------------------+---------------------+
+| id | address | bio  | company | name | account_id | created_at          | updated_at          |
++----+---------+------+---------+------+------------+---------------------+---------------------+
+|  1 | a       | a    | aa      | a    |          1 | 2019-05-21 08:43:43 | 2019-05-22 01:40:37 |
+|  2 | b       | b    | b       | b    |          2 | 2019-05-22 08:57:05 | 2019-05-22 08:57:05 |
++----+---------+------+---------+------+------------+---------------------+---------------------+
+2 rows in set (0.00 sec)
+
+mysql> update profiles set company = '아키브';
+ERROR 1366 (HY000): Incorrect string value: '\xEA\xBE\xAA\xEA\xB6\x8E...' for column 'company' at row 1
+mysql> insert porfiles into company values '아키브';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'into company values '?▒키▒?' at line 1
+
+
+
+2019-05-27 11:31:27.540 ERROR 1392 --- [nio-8080-exec-2] o.a.c.c.C.[.[.[/].[dispatcherServlet]    : Servlet.service() for servlet [dispatcherServlet] in context with path [] threw exception [Request processing failed; nested exception is org.springframework.orm.jpa.JpaSystemException: could not execute statement; nested exception is org.hibernate.exception.GenericJDBCException: could not execute statement] with root cause
+
+java.sql.SQLException: Incorrect string value: '\xEC\x88\x98\xEC\xB1\x84...' for column 'name' at row 1
+
+mysql> SELECT host, user, password FROM mysql.user WHERE user='springuser';
++------+------------+-------------------------------------------+
+| host | user       | password                                  |
++------+------------+-------------------------------------------+
+| %    | springuser | *2E595620995B7E9857EC942E63D02932703E4658 |
++------+------------+-------------------------------------------+
+1 row in set (0.01 sec)
+[oracle@localhost ~]$ mysql -u springuser -p db_example
+Enter password:
+ERROR 1045 (28000): Access denied for user 'springuser'@'localhost' (using password: YES)
+[oracle@localhost ~]$
+

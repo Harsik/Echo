@@ -52,7 +52,18 @@ public class FileStorageService {
     }
 
     public void saveFileInfo(String name, String downloadUri, String type, Long size) {
-        FileInfo fileInfo = new FileInfo(name, downloadUri, type, size);
+        FileInfo fileInfo = new FileInfo();
+        
+        if (fileInfoRepository.existsByName(name)) {
+            fileInfo = fileInfoRepository.findByName(name)
+                    .orElseThrow(() -> new FileStorageException("FileInfo not found with name : " + name));
+        }
+
+        fileInfo.setName(name);
+        fileInfo.setDownloadUri(downloadUri);
+        fileInfo.setType(type);
+        fileInfo.setSize(size);
+        
         fileInfoRepository.save(fileInfo);
     }
 

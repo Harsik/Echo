@@ -90,11 +90,6 @@ public class AccountService implements UserDetailsService {
         }
 
         public Account editProfile(ProfilePayload profilePayload) {
-                String name = profilePayload.getName();
-                String bio = profilePayload.getBio();
-                String company = profilePayload.getCompany();
-                String address = profilePayload.getAddress();
-
                 Account account = accountRepository.findByEmail(profilePayload.getEmail())
                                 .orElseThrow(() -> new UsernameNotFoundException(
                                                 "Account not found with email : " + profilePayload.getEmail()));
@@ -105,10 +100,10 @@ public class AccountService implements UserDetailsService {
                                                         "Profile not found with id : " + account.getId()));
                 }
                 
-                profile.setName(name);
-                profile.setBio(bio);
-                profile.setCompany(company);
-                profile.setAddress(address);
+                profile.setName(profilePayload.getName());
+                profile.setBio(profilePayload.getBio());
+                profile.setCompany(profilePayload.getCompany());
+                profile.setAddress(profilePayload.getAddress());
 
                 account.setProfile(profile);
                 profile.setAccount(account);

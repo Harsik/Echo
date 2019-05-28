@@ -51,6 +51,13 @@ public class FileStorageService {
         return fileInfoRepository.findAll();
     }
 
+    public void deleteFileInfo(String fileName) {
+        FileInfo fileInfo = fileInfoRepository.findByName(fileName)
+                    .orElseThrow(() -> new FileStorageException("FileInfo not found with name : " + fileName));
+
+        fileInfoRepository.delete(fileInfo);
+    }
+
     public void saveFileInfo(String name, String downloadUri, String type, Long size) {
         FileInfo fileInfo = new FileInfo();
         

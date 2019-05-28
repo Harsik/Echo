@@ -56,6 +56,12 @@ public class FileController {
         return fileStorageService.loadFiles();
     }
 
+    @GetMapping("/deleteFile")
+    public UploadFileResponse deleteFile(@RequestParam(value = "fileName") String fileName) {
+        fileStorageService.deleteFileInfo(fileName);
+        return new UploadFileResponse(fileName, "", "", '0');
+    }
+
     @PostMapping("/uploadFile")
     public UploadFileResponse uploadFile(@RequestParam("file") MultipartFile file) {
         String fileName = fileStorageService.storeFile(file);
@@ -74,6 +80,8 @@ public class FileController {
     @GetMapping("/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
         // Load file as Resource
+        System.out.println("fileName: " + fileName);
+        System.out.println("request: " + request);
         Resource resource = fileStorageService.loadFileAsResource(fileName);
 
         // Try to determine file's content type
@@ -92,5 +100,13 @@ public class FileController {
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
+    }
+    
+    @PostMapping("/downloadMultipleFiles")
+    public List<ResponseEntity<Resource>> downloadMultipleFiles(@RequestParam("fileNames") String[] fileNames,
+            HttpServletRequest request) {
+        System.out.println("fileNames: "+fileNames);
+        System.out.println("request: " +request);
+        return Arrays.asList(fileNames).stream().map(fileName -> downloadFile(fileName, request)).collect(Collectors.toList());
     }
 }

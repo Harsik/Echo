@@ -1,0 +1,43 @@
+개발 15일차
+BGM - Nilo 지나오다
+아침에 커피 한잔 하면서 카페에서 들려오는 곡이 너무 맘에 든다. 예전에도 들었던 곡이지만 명곡이다.
+집에서 동전 가져오지 않은게 후회될 정도로 가져왔으면 동전노래방 갔을텐데
+어제까지 하던일은 멀티플 다운로드를 구현하는 일이다. 그냥 app에서 반복문으로 돌리면 해결될 일이지만
+좀 더 서버 부담을 줄이기 위한 개선 방법으로 요청 한번 응답 한번으로 해결 할 수 있는 기능으로 만들어
+보자고 노력을 기우리고 있었다. 근데 왜인지는 몰라도 request parameter로 string배열이 전달되지가 
+않는다. 이유가 있을텐데 이걸 해결하면 rest api에 대한 이해가 좀 더 넓어질듯 하다. 
+통신 에러 메세지는 다음과 같다. Required String[] parameter 'fileNames' is not present
+파라미터가 null 이거나 type에 맞지 않는 경우 발생한다고 한다. 내 경우에는 type에 맞지 않는 것이니
+맞춰주기만 하면 되는데 어떻게 하면 좋을까? 생각보다 간단한 문제였다. JSON.stringify를 해주지 않으니
+type json이 안 맞는다고 뜨는것 json화 해주니 fileNames이 제대로 뜬다. 그 다음 에러가
+No serializer found for class java.io.BufferedInputStream and no properties discovered to create BeanSerializer
+이건 뭘까? serializer를 BufferedInputStream에서 찾을 수 없다고 한다. BeanSerializer를 생성하는데 프로퍼티를
+찾을 수 없다라. .collect(Collectors.toList())를 위해서 return 받는 객체를 serialize하는데 필요한 
+프로퍼티를 발견할 수 없는 객체라서 문제가 생기는 것 같다. 즉 ResponseEntity는 serialize할 수 없는 것이라
+기존의 함수를 적용할 수 없는 것이다 이것도 조금 변경이 필요하다. ResponseEntity에 resource를 배열로 넣으면
+어떻게 될까? 안된다 hearder에 resource의 fileNames이 들어가야 한다. 결국한 hearder, body 각각 하나의
+resource를 반환해야한다는 얘기다. 응답을 반복하던가, 압축파일로 만들어서 보내던가 둘중 하나인데 
+압축파일은 나중에 추가 적으로 해보고 지금은 응답을 반복하는 방향으로 가보자. 그러자
+SyntaxError: Unexpected end of JSON input이 떳다 얼마전에 같은 오류가 난게 기억이 난다.
+저번과 같은 오류를 해결하고 다운로드 버튼을 눌러보니 다운로드는 안되나 response는 뜬다.
+살펴보니 내가 선택했던 파일명의 목록만 뜬다. 응답이 이상한 듯하다. postman으로 실제 어떤 응답 헤더를 
+가지고 오는지 확인해봐야겠다. request payload에 목록이 있는 것이였고 response가 오지 않았다.
+기존 downloadfile function은 GetMapping으로 httpresponse가 자동 매핑되는 것인지 request만 파라미터로 
+받는다. 혹시 body만 resource로 채우면 되는게 아닌가 해봤더니 컨텐츠타입이 정해지지 않아서 인지
+binary 값이 나온다. 시간 들여 찾아봤지만 한번의 응답의 복수의 ResponseEntity를 return 할 수 없었다.
+하나의 요청당 하나의 응답 하나의 파일만이 가능했다. 결국 app에서 여러번의 요청과 응답을 반복할 수 밖에 없겠다.
+문제가 생겼다. 여태까지 app에서 download를 실행한 적이 없어서 몰랐는데 electron에서 파일 다운로드가 
+브라우저처럼 이루어지지 않는다. 브라우저마다 파일다운로드 하는 형식도 조금씩 다르니 그럴만도 하다.
+허탈하다 겨우 답을 찾은 줄 알았는데 일렉트론이 지원하는 파일 다운로드 패키지를 찾아야 한다. node.js에서 
+파일 api를 만들어야 하나? 가능한지 검색하고 나오는 방법들을 적용해보고 있지만 잘 먹히지 않는다.
+response를 file로 저장한다면 가능할지도? file로 저장하는건 할 수 있으나 response에서 무엇을 저장하는지
+어떻게 저장하는지는 아직 모른다. 좀 더 해보면 제대로된 파일을 저장할 수 있을 것 같다. response의 body가
+readablestream으로 되어 있다. 이것에 대해 알아보고 내가 원하는 정보를 얻을 수 있는지 알아봐야 한다.
+아 망할 답답하다. readablestream으로 파일 내용을 채울 수 잇는게 맞나? 아니면 response를 잘못 받는 건가?
+controller에서 resource로 받는게 맞나? electron에서 이방법을 쓰는게 맞나? 아니면 response를 바로 파일
+다운로드 되게 하는 np가 있나? np를 써야하나? 도대체 무슨 방법을 사용해야 하는 걸까? readablestream의
+reader에서 read하여 value를 가져와 파일안에 저장하는데 성공했다. 다행히 txt 파일은 정상적으로 저장된다.
+다만 이미지나 다른 파일형식들은 지원하지 않는듯 하다. 아니다 내가 모든 value를 가지고 오지 않아서 그런것 같다.
+어떻게 된건지는 몰라도 filestream을 모두 받고 나가는 작업 중에 저장하기로 한 data가 초기화되는지 undefined가
+저장된다. 너무 시간을 잡아 먹고 있다. 이건 여기서 손을 때고 나중에 해야겠다. electron dl,
+electron downloaditem, electron fileapi 다 안된다. 방법이 뭘까?

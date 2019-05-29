@@ -96,17 +96,49 @@ public class FileController {
         if (contentType == null) {
             contentType = "application/octet-stream";
         }
+        System.out.println("contentType: " + contentType);
+        System.out.println("resource.getFilename(): " + resource.getFilename());
 
+        // return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
                 .body(resource);
     }
-    
-    @PostMapping("/downloadMultipleFiles")
-    public List<ResponseEntity<Resource>> downloadMultipleFiles(@RequestParam("fileNames") String[] fileNames,
-            HttpServletRequest request) {
-        System.out.println("fileNames: "+fileNames);
-        System.out.println("request: " +request);
-        return Arrays.asList(fileNames).stream().map(fileName -> downloadFile(fileName, request)).collect(Collectors.toList());
-    }
+
+    // @PostMapping("/downloadMultipleFiles")
+    // public ResponseEntity<Resource> downloadMultipleFiles(@RequestBody String[] fileNames,
+    // HttpServletRequest request) {
+    // for (String fileName : fileNames) {
+    // Resource resource = fileStorageService.loadFileAsResource(fileName);
+    //         String contentType = null;
+    //         try {
+    //             contentType = request.getServletContext().getMimeType(resource.getFile().getAbsolutePath());
+    //         } catch (IOException ex) {
+    //             logger.info("Could not determine file type.");
+    //         }
+    //         if (contentType == null) {
+    //             contentType = "application/octet-stream";
+    //         }
+            
+    //         System.out.println("resource.getFilename(): " + resource.getFilename());
+    //         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))
+    //                 .header(HttpHeaders.CONTENT_DISPOSITION, "attachment; filename=\"" + resource.getFilename() + "\"")
+    //                 .body(resource); 
+    // }
+    //     return null;
+    // }
+    // @PostMapping("/downloadMultipleFiles")
+    // public void downloadMultipleFiles(@RequestBody String[] fileNames,
+    //         HttpServletRequest request) {
+    //     for (String fileName : fileNames) {
+    //         downloadFile(fileName, request);
+    //     }
+    // }
+    // @PostMapping("/downloadMultipleFiles")
+    // public List<ResponseEntity<Resource>> downloadMultipleFiles(@RequestBody
+    // String[] fileNames,
+    // HttpServletRequest request) {
+    // return Arrays.asList(fileNames).stream().map(fileName ->
+    // downloadFile(fileName, request)).collect(Collectors.toList());
+    // }
 }

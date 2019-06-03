@@ -18,7 +18,7 @@ No serializer found for class java.io.BufferedInputStream and no properties disc
 어떻게 될까? 안된다 hearder에 resource의 fileNames이 들어가야 한다. 결국한 hearder, body 각각 하나의
 resource를 반환해야한다는 얘기다. 응답을 반복하던가, 압축파일로 만들어서 보내던가 둘중 하나인데 
 압축파일은 나중에 추가 적으로 해보고 지금은 응답을 반복하는 방향으로 가보자. 그러자
-SyntaxError: Unexpected end of JSON input이 떳다 얼마전에 같은 오류가 난게 기억이 난다.
+SyntaxError: Unexpected end of JSON input이 떳다. 얼마전에 같은 오류가 난게 기억이 난다.
 저번과 같은 오류를 해결하고 다운로드 버튼을 눌러보니 다운로드는 안되나 response는 뜬다.
 살펴보니 내가 선택했던 파일명의 목록만 뜬다. 응답이 이상한 듯하다. postman으로 실제 어떤 응답 헤더를 
 가지고 오는지 확인해봐야겠다. request payload에 목록이 있는 것이였고 response가 오지 않았다.

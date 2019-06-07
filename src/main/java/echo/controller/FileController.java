@@ -79,9 +79,9 @@ public class FileController {
 
     @GetMapping("/downloadFile/{fileName:.+}")
     public ResponseEntity<Resource> downloadFile(@PathVariable String fileName, HttpServletRequest request) {
-        // Load file as Resource
-        System.out.println("fileName: " + fileName);
-        System.out.println("request: " + request);
+        // // Load file as Resource
+        // System.out.println("fileName: " + fileName);
+        // System.out.println("request: " + request);
         Resource resource = fileStorageService.loadFileAsResource(fileName);
 
         // Try to determine file's content type
@@ -96,8 +96,8 @@ public class FileController {
         if (contentType == null) {
             contentType = "application/octet-stream";
         }
-        System.out.println("contentType: " + contentType);
-        System.out.println("resource.getFilename(): " + resource.getFilename());
+        // System.out.println("contentType: " + contentType);
+        // System.out.println("resource.getFilename(): " + resource.getFilename());
 
         // return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType)).body(resource);
         return ResponseEntity.ok().contentType(MediaType.parseMediaType(contentType))

@@ -4,7 +4,7 @@ repository를 작성하는 jparepository 혹은 crudrepository를
 이걸 어디서 봤는지는 전혀 기억나지 않는다. 찾을까 했는데 
 귀찬아서 안 찾는다. orElseThrow(() -> new AppException("User Role not set."));
 부분에서 에러가 생기는데 라이브러리는 찾아도 해결하지 못하는
-이상한 현상이 생긴다. 원인을 좀 더 찾아봐야겠다.
+이상한 현상이 생긴다. 원인을 좀 더 찾아봐야겠다. --- 어떻게 해결했는지 안 적혀있어서 적습니다. 선언 타입이 Optional이 아니여서 였습니다. 06.07
 Lombok의 Builder와 @ID, @CreationTimestamp 등이 호환이
 안되는 것 같다. 자동 생성되는 것들을 뺀 생성자를 하나 
 만들어야된다. AppException를 추가하지 않은 문제였다.

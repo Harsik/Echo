@@ -17,7 +17,7 @@ vue가 이렇게 힘들 줄야. 여기에 지금 했던 것을 정리한다.
 여기서 currentUserLogin는 자식에서 props: ['currentUserLogin']로 값을 받을 수 있다.
 currentUser='currentUser'도 상관 없다. 앞에 선언된 이름이 자식에서 props으로 선언되야된다는게 
 중요하다. 그리고 자식->부모면 꼭 메소드로 전달할 수 있다. this.$emit('sendCurrentUser', true)하면
-부모에서  getCurrentUser: function (text) {this.currentUser = text} 인것이다. emit하면 전달한 true가
+부모에서  getCurrentUser: function (text) {this.currentUser = text} 인것이다. emit하면 전달한 true가 --- text가 true가 됨 06.07
 text가 된다. 이제 간단하게 currentUser가 true때 UI를 구현해 놓고 Logout을 만들 차례이다.
 이상하게 Vuetify 최신 버전 메뉴얼을 사용하면 안되고 구 버전을 사용하니깐 내가 원했던 dropdown 메뉴가
 만들어 졌다. dropdown메뉴를 클릭하면 그 밑으로 profile,setting, logout 등을 구현할 예정이다.

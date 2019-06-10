@@ -1,9 +1,14 @@
 buildscript {
     repositories {
+		jcenter()
         mavenCentral()
     }
     dependencies {
         classpath("org.springframework.boot:spring-boot-gradle-plugin:2.1.3.RELEASE")
+		classpath("io.spring.gradle:dependency-management-plugin")
+    }
+    configurations {
+	    compile.exclude module: "spring-boot-starter-tomcat"
     }
 }
 
@@ -23,15 +28,14 @@ repositories {
     mavenCentral()
 }
 
+
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
-    compile("org.springframework.boot:spring-boot-starter-thymeleaf")
+    // compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     // compile("org.springframework.boot:spring-boot-starter-web")
-    // tag::security[]
     compile("org.springframework.boot:spring-boot-starter-security")
-    // end::security[]
     compile("org.springframework.boot:spring-boot-starter-logging")
 
     // compile("org.springframework.session:spring-session-data-redis") 
@@ -39,14 +43,14 @@ dependencies {
     compile("org.springframework.boot:spring-boot-starter-web") {
 		exclude group: "org.springframework.boot", module: "spring-boot-starter-tomcat"
 	}
-	compile "org.springframework.boot:spring-boot-starter-undertow"
+	compile("org.springframework.boot:spring-boot-starter-undertow")
     providedRuntime 'org.springframework.boot:spring-boot-starter-undertow'
     compile("org.springframework.boot:spring-boot-starter-data-jpa")
     compile("org.projectlombok:lombok")
 	annotationProcessor 'org.projectlombok:lombok:1.18.6'
     compile ("io.jsonwebtoken:jjwt:0.9.0")
     compile ("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-    compile ("org.springframework.boot:spring-boot-devtools")
+    // compile ("org.springframework.boot:spring-boot-devtools")
     // compile ("org.springframework.security.oauth:spring-security-oauth2")
     compile ("org.springframework.boot:spring-boot-starter-data-rest")
     // compile group: 'org.springframework.security.oauth', name: 'spring-security-oauth2', version: '2.3.5.RELEASE'

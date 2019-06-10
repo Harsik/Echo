@@ -7,13 +7,21 @@ server:
             cookie:
                 http-only: true
                 secure: true
+    undertow:
+        accesslog:
+                dir: 'C:/Users/Achivsoft/Documents' # Undertow access log directory.
+                enabled: true # Whether to enable the access log.
+                prefix: access_log # Log file name prefix.
+                suffix: log # Log file name suffix.
 
 spring:
     datasource:
         url: jdbc:mysql://192.168.137.59:3306/db_example?serverTimezone=UTC
         # driverClassName: com.mysql.jdbc.Driver # Loading class `com.mysql.jdbc.Driver'. This is deprecated. The new driver class is `com.mysql.cj.jdbc.Driver'. The driver is automatically registered via the SPI and manual loading of the driver class is generally unnecessary.
-        username: springuser
-        password: ThePassword
+        # username: springuser
+        # password: thepassword
+        username: sqlusr01
+        password: sqlusr01
         initialization-mode: always
     jpa:
         properties:
@@ -42,10 +50,10 @@ logging:
         # springframework:
             # web: always
         org:
-            springframework:
+            hibernate:
+                SQL: debug
+            # springframework:
                 # security: debug
-                hibernate:
-                    SQL: debug
 app:
     jwtSecret: JWTSuperSecretKey
     jwtExpirationInMs: 604800000

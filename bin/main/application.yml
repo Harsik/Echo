@@ -7,6 +7,12 @@ server:
             cookie:
                 http-only: true
                 secure: true
+    undertow:
+        accesslog:
+                dir: 'C:/Users/Achivsoft/Documents' # Undertow access log directory.
+                enabled: true # Whether to enable the access log.
+                prefix: access_log # Log file name prefix.
+                suffix: log # Log file name suffix.
 
 spring:
     datasource:
@@ -35,8 +41,8 @@ spring:
         multipart:
             enabled: true
             file-size-threshold: 2KB
-            max-file-size: 200MB
-            max-request-size: 215MB
+            max-file-size: 500MB
+            max-request-size: 515MB
         
 logging:
     level:
@@ -46,7 +52,7 @@ logging:
         org:
             hibernate:
                 SQL: debug
-            springframework:
+            # springframework:
                 # security: debug
 app:
     jwtSecret: JWTSuperSecretKey

@@ -47,7 +47,6 @@ public class AccountController {
 
         Account account = accountService.editProfile(profilePayload);
 
-        //TODO: process POST request
         URI location = ServletUriComponentsBuilder.fromCurrentRequest().path("/{accountId}").buildAndExpand(account.getId())
                 .toUri();
 

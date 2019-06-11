@@ -1,0 +1,49 @@
+개발 20일차
+오늘 첫말은 무얼로 적을까 고민하고 있는데 막상 쓸거리가 안떠오르다니 고민이구나. 어제 했던 일이나 정리해 보자. 
+어제 그 고생스러운 파일 다운로드 작업을 마쳤고 프로그레스도 했고 WAS를 undertow로 바꿨고 파일 다운로드가 한글
+지원이 안되는 문제는 아직 해결 안됬다. 오늘 오전은 이걸 해결할려고 해본다. 그리고 아이콘 이미지와 파비콘 이미지도
+만들어 볼려한다. 또 예전부터 거슬렸던 warning들 해결해 볼려했는데 검색 결과로 나온 방법으로도 안되서 새로 템플릿을
+깔아보니 거기서도 warning이 뜬다. 원래 있었던 것이니 그러려니 치부할려고 한다. 해결도 못 본채 오전, 점심 시간이 
+지나갔다. 중간에 은행에서 전화온 뒤로 앞으로 10일남은 잔금일에 준비해야 할 일에 대해 생각하고 전화하면서 약속 잡고
+계속 잡고 문제 없는지 검증하는 시간을 갖다 보니 시간이 금방 갔다. 지금 당장 해야할 목표는 한글 이름 파일을 정상적으로
+다운로드 하는 것이다. 좀 더 자세히 찾아보니 파일명을 지정할 수 있는 options이 있었다. 저장할 폴더를 지정하는 것처럼
+파일명을 지정하니 정상적으로 한글 파일명인 파일이 다운로드 되었다. 아이콘 이미지와 파비콘 이미지 만드는 건 내 실력으로는
+조잡하기 짝이 없을 것 같고 시간도 버리는 것 같은데 아이콘 사이트를 찾아보자. 아이콘 넣는 방법도 찾고. 생각해보니깐
+아이콘이란 이 앱에 시각적으로 단숨에 보여줄 수 있는 가장 대표적인 이미지 아닌가? 과연 이 앱에 어울리는 것인 무엇일까?
+연구 개발 노력 여러가지 등등 생각이 난다. 약간 공학적인 삼각자와 플라스크가 섞인 이미지가 있으면 좋겠다.
+앱 이름도 바꾸자 몇개월 동안 계속 elecapp이였다. 괜찬은 이름이 뭐 있을까? 늘 그렇지만 이름 짓는건 매우 어려운일 아니겠는가
+그래서 작명소도 있는것이고 내가 이프로젝트를 위해 써왔던 기술및 도구들을 나열해 보자. spring, spring framwork, spring security,
+jpa, spring boot, vscode, undertow, gradle, mysql, jwt, vue, vuetify, electron, vue-cli, webpack, nodejs, yarn 
+이정도로 만 써보고 보면 일단 spring은 들어간다. vue도 들어간다. spring,vue,electron 흠 별로 어울리는 이름들이 아닌데
+UnderSeed, underseed 어떤가? 봄을 기다리는 땅속 씨앗 괜찬을 듯 싶다. 아이콘도 당장 바꾸자. 아이콘 느낌은 수첩안에 그려
+여기에 올리지 못하나 설명하자면 원안에 땅속 뿌리와 피어있는 새싹이다. 역시 내가 생각하는 이미지와 딱맞는 아이콘을 찾기는 쉽지 않다
+그렇게 다섯페이지즘 지나갔을때 이거다 하는 느낌에 아이콘을 찾았다. 빌드가 너무 오래 걸린다. yarn run dev는 테스트 용이라
+그런지 아이콘이 변경되지 않았다 그래서 빌드로 하는 중인데 방금 사용한 사이트에서 받은 파일이 깨졋는지 빌드가 안된다.
+다른 사이트에서 받아오니깐 그제서야 256x256으로 달라고 한다. 드디어 빌드가 완료 되었다. 오래걸려서 짜증나긴 했지만
+그래도 설치파일과 실행파일이 내가 지정했던 아이콘으로 자리 잡고 있으니 감격스럽다. 이제 다음 단계로 넘어갈 때이다. 
+역시 자기가 쉽지 않다는 것을 증명이라도 하듯 시뻘건 글자를 내뿜으면서 앱이 구동되지 않는다. 진짜 어떻게 해야할 지
+감조차 잡히지 않는다. 다행히도 카카오 devtalk에 어떻게 해야하는지 나와있다. https://devtalk.kakao.com/t/electron-daum-map-api/39175/2
+결론은 http,https 프로토콜만 지원이 되기 때문에 electron은 사용할 수 없다. 구글 map api는 지원이 되지만 유료이며
+고로 사용하지 않을 것이다. 내 생각엔 정말 필요하게 된다면 그 때 사용해야할 것 같다. 지도 api를 이용한 mapping 기능은
+취소되었다. 검색하다 보니깐 electron과 비슷한 것이 보인다. 구글에서 배포하는 프로그레시브 웹 앱 이라는 건데 줄여 pwa라고 한다.
+ 뭐라 뭐라 적혀있지만 간단하게 말하자면 웹과 앱에 장점을 모아 만들 것이라 한다. electron같은걸 구글이 배포하고 있으니 마음이 끌린다.
+나중에 한번 pwa로 토이 프로젝트를 진행해 보고 싶다.
+
+  ERROR in ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-7fa3a9b8","hasScoped":false,"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./src/renderer/components/Mapping.vue
+  (Emitted value instead of an instance of Error)
+    Error compiling template:
+
+    <v-layout align-start justify-center>
+      <v-flex xs12 sm6>
+        <div id="map" style="width:500px;height:400px;">
+          <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=9d9d934e871cf40eb66f5f25f178af76"></script>
+        </div>
+      </v-flex>
+    </v-layout>
+
+    - Templates should only be responsible for mapping the state to the UI. Avoid placing tags with side-effects in your templates, such as <script>, as they will not be parsed.
+
+   @ ./src/renderer/components/Mapping.vue 6:0-254
+   @ ./src/renderer/router/index.js
+   @ ./src/renderer/main.js
+   @ multi ./.electron-vue/dev-client ./src/renderer/main.js

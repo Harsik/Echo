@@ -27,7 +27,9 @@ UnderSeed, underseed 어떤가? 봄을 기다리는 땅속 씨앗 괜찬을 듯 
 고로 사용하지 않을 것이다. 내 생각엔 정말 필요하게 된다면 그 때 사용해야할 것 같다. 지도 api를 이용한 mapping 기능은
 취소되었다. 검색하다 보니깐 electron과 비슷한 것이 보인다. 구글에서 배포하는 프로그레시브 웹 앱 이라는 건데 줄여 pwa라고 한다.
  뭐라 뭐라 적혀있지만 간단하게 말하자면 웹과 앱에 장점을 모아 만들 것이라 한다. electron같은걸 구글이 배포하고 있으니 마음이 끌린다.
-나중에 한번 pwa로 토이 프로젝트를 진행해 보고 싶다.
+나중에 한번 pwa로 토이 프로젝트를 진행해 보고 싶다. map api는 안되지만 map rest api는 된다. 이게 무슨 소리냐면 지도를 표기하는 
+기능은 안되지만 지역은 검색하는 기능은 되서 주소의 다양한 정보 예를 들어 행정구역이라던데 우편번호 같은 정보들을 rest api를 통해
+응답 받을 수 있다는 것이다. 좀 더 읽어 보고 우편번호 제공 기능이라던게 행정구역 정보 제공 기능 같은 것을 구현 할 수 있을 것이다.
 
   ERROR in ./node_modules/vue-loader/lib/template-compiler?{"id":"data-v-7fa3a9b8","hasScoped":false,"buble":{"transforms":{}}}!./node_modules/vue-loader/lib/selector.js?type=template&index=0!./src/renderer/components/Mapping.vue
   (Emitted value instead of an instance of Error)

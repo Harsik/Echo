@@ -1,2 +1,8 @@
 개발 23일차
-이번 주 마지막 금요일이다. 내일은 주말이 기다리고 있으니 좀만 더 힘내자.
+이번 주 마지막 금요일이다. 내일은 주말이 기다리고 있으니 좀만 더 힘내자. 어제 하던 작업을 이어서 할려고 한다. 하다보니 header를 수정해야 일이 
+생기는 데 어제 파일 업로드 때 api는 다른 header를 가지는 request를 만들어서 사용을 했다. 그러니 새로운 reqeust 만큼 코드량이 늘어나는 것이다.
+기존에 있는 requset를 header만 수정해 쓸 수 있다면 코드를 줄일 수 있을 것이다. 그냥 header를 null로 만드는 것은 안된다. header의 contents-type만
+수정할 수 있어야 한다. headers: {'Content-Type': 'multipart/form-data; boundary=----WebKitFormBoundary5IKuSLhzzbDa86h8'} 로 
+수정 할 수 있었지만 또 다시 에러가 발생한다. 확인 해 보니 위처럼 작성해도 contents-type만 변경되는 것이 아니라 header 전체가 변경된다.
+Object.assign()이 같은 키 값이면 값을 덮어 씌우는 데 하위 키까지 찾아서 값을 바꿔주지 않는다. 결국 new Header 선언으로 헤더객체를 만들어 줘야 하는데
+그렇게 되면 그냥 새로운 request를 만드는 편이 나을 것이다.

@@ -9,4 +9,22 @@ ios 환경에 적합한 것들을 제공하긴 하지만 electron는 전혀 없�
 처음에는 위치를 잘못 찾아서 그런줄 알았는데 import { REST_API_KEY } from '../constants'같이 위치도 제대로 찾고
 마우스 올렸을 때 툴팁으로 값도 잘 불러오는 건줄 줄 알았는데 설마 .ts확장자는 안되는 거였다니 .js로 확장자를 고쳐서 앱을 제대로
 실행 시킬 수 있었다. 실행 결과가 화면에 나타났다. 여기에도 올리고 싶지만 사진은 안되서 이럴땐 차라리 블로그처럼 글을 쓰는게 어떻겠냐는
-생각도 들지만 할 수 있기야 한데 이걸로 충분하지 않을까? 내가 쓰고 있는 이 일지와 git history로 어떻게든 될 듯 싶다.
+생각도 들지만 할 수 있기야 한데 이걸로 충분하지 않을까? 내가 쓰고 있는 이 일지와 git history로 어떻게든 될 듯 싶다. 이제 문제는 
+나온 데이터를 어떻게 가공하여 어떤 화면을 제공할 것인가이다. https://developers.kakao.com/docs/restapi/local를 보면 출력되는
+파라미터에 대해서 자세히 나와있다. 역시 이런건 수첩에 프로토타입의 모습을 그려가며 만드는게 제일 좋다고 생각한다. 대략적으로
+그럴싸한 모습이 나왔다. 이제 검색 기능을 추가해 보자. 입력 후 검색 지연시간을 넣었다. signup에서 같은 아이디를 찾는 기능 같이
+입력 후 일정시간 후면 method가 동작하는 것이다. 이제 좀 그럴싸하다. 지도 기능을 넣지 못해서 이 정보 밖에 할 수 없을 것 같다.
+라고 생각했었는데 ArcGIS API는 무료고 electron을 지원하는 듯 하다. 누군가 관련된 글을 유투브로 올려놨다. 하지만 
+ArcGIS API까지 사용할 일은 없을 것 같다. daum map, naver map, google map 이 3개 정도가 사용할 만한데 daum, naver는 지원을 안하고
+naver, google은 유로 api이다. v-html로 넣어 해결해 볼려고 하고 있지만 별 효과는 없다. vue-router로 html 문서를 여는 방법으로
+해보자. 문서는 열리나 결국 api가 실행되지 않는다. parsing도 안되고 compiling도 안된다.
+Templates should only be responsible for mapping the state to the UI. Avoid placing tags with side-effects in your templates, such as <script>, as they will not be parsed.
+의욕이 떨어진다. 정부에서 제공하는 open api도 rest api라 json으로 불러오는 데이터를 가공할 뿐이고 지루한 작업이다. 
+이제 뭘 해야 할까? 이번 프로젝트는 잠시 접고 reactjs의 토이 프로젝트를 진행할까? 아니면 spring boot에서 할 수 있는 작업을 좀 더
+찾아볼까? 아니면 RMS 코드 분석 해볼까? reactsjs쪽을 보니 재밌게도 reactjs의 몇가지 문제점을 해결하면서 새로운 이름을 가지고 탄생한
+언어가 있다. react hooks. react 새로운 버전이라니 궁금하기 그지 없다. 그리고 나의 기술 발전을 어떻게 해야 할지 고민중이다.
+기본적으로 나는 java, javascript를 이용한 웹 서버 개발자이다. 안으로 자세히 들어가면 spring, react, nodejs 등등 다양한 언어와
+기술, 도구들이 있지만 간단히 말하자면 이렇다. 그리고 프로그래머로 배울 수 있는건 산더미 같지만 어느 한분야를 택해 그걸 빠르고 깊게
+파는 것이 중요할 것이다. 내가 웹프로그래머로 시작했으면 그 분야에서 사용되거나 관계 있는 것을 모두 배우고 익혀 깊게 쓸 수 있어야 한다.
+하지만 그렇게 하면 내 인생 모든 시간을 써도 모자를 것이다. 지금 내 회사가 중점적으로 다루고 있는 것과 내가 생각하기에 미래에 쓸 수도
+있는 것들을 준비해야 할 것이다.

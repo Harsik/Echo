@@ -1,8 +1,5 @@
 package echo.service;
 
-import java.time.LocalDateTime;
-import java.util.Collections;
-
 import javax.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,13 +10,10 @@ import org.springframework.stereotype.Service;
 
 import echo.model.Account;
 import echo.model.AvatarFileInfo;
-import echo.model.FileInfo;
 import echo.model.Profile;
 import echo.payload.ProfilePayload;
-import echo.payload.SignRequest;
 import echo.repository.AccountRepository;
 import echo.repository.AvatarFileInfoRepository;
-import echo.repository.FileInfoRepository;
 import echo.repository.ProfileRepository;
 import echo.security.AccountPrincipal;
 
@@ -31,9 +25,6 @@ public class AccountService implements UserDetailsService {
 
         @Autowired
         private ProfileRepository profileRepository;
-
-        @Autowired
-        private FileInfoRepository fileInfoRepository;
 
         @Autowired
         private AvatarFileInfoRepository avatarFileInfoRepository;

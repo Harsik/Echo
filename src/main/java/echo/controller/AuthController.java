@@ -2,14 +2,11 @@ package echo.controller;
 
 import echo.exception.AppException;
 import echo.model.Account;
-import echo.model.Profile;
 import echo.model.Role;
 import echo.model.RoleName;
 import echo.payload.ApiResponse;
 import echo.payload.JwtAuthenticationResponse;
-import echo.payload.LoginRequest;
 import echo.payload.SignRequest;
-import echo.payload.SignUpRequest;
 import echo.repository.AccountRepository;
 import echo.repository.RoleRepository;
 import echo.security.JwtTokenProvider;
@@ -21,20 +18,15 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
 
-import java.io.File;
 import java.net.URI;
-import java.time.LocalDateTime;
 import java.util.Collections;
 
 @RestController
@@ -86,9 +78,6 @@ public class AuthController {
                 .orElseThrow(() -> new AppException("Account Role not set."));
         
         accont.setRoles(Collections.singleton(userRole));
-
-        // Profile profile = new Profile();
-        // accont.setProfile(profile);
 
         Account result = accountRepository.save(accont);
 

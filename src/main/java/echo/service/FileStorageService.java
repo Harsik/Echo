@@ -2,17 +2,13 @@ package echo.service;
 
 import echo.exception.FileStorageException;
 import echo.exception.MyFileNotFoundException;
-import echo.model.Account;
 import echo.model.FileInfo;
 import echo.property.FileStorageProperties;
-import echo.repository.AccountRepository;
 import echo.repository.FileInfoRepository;
-import echo.payload.UploadFileResponse;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.UrlResource;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -31,9 +27,6 @@ public class FileStorageService {
 
     @Autowired
     private FileInfoRepository fileInfoRepository;
-
-    @Autowired
-    private AccountRepository accountRepository;
 
     @Autowired
     public FileStorageService(FileStorageProperties fileStorageProperties) {

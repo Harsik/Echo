@@ -33,6 +33,12 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+    // RabbitMQ Starter Dependency
+    compile("org.springframework.boot:spring-boot-starter-websocket")
+    compile("org.springframework.boot:spring-boot-starter-amqp")
+    // Following additional dependency is required for Full Featured STOMP Broker Relay
+    compile("org.springframework.boot:spring-boot-starter-reactor-netty")
+
     // compile("org.springframework.boot:spring-boot-starter-thymeleaf")
     // compile("org.springframework.boot:spring-boot-starter-web")
     compile("org.springframework.boot:spring-boot-starter-security")

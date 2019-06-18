@@ -1,0 +1,42 @@
+개발 25일차
+나는 삶은 가시밭길 끝에 꽃을 보기위한 여정이라고 생각을 한다. 늘 목표를 세우고 그걸 달성하기 위해 부단하게 노력하고 있다. 
+그래도 힘든 건 힘들다. 힘들어 감정에 젖어들길래 한번 써봤다. 누가 보면 좀 창피할 지도 
+오늘 목표는 websocket에 대한 재이해와 심화 이해 그리고 front에서 websocket을 만들어 back과 연결하고 채팅창을 만드는 것이다.
+테마는 카카오톡, 좋아 채팅창이 front와 back이 websocket으로 연결되면서 통신한다는 것을 알았다. 그러면서 문득 생각나는 것은
+누군가 들어오고 나가는 것을 broadcast 한다는 것인데 이건 어떤 원리로 작동하는 것일까? 찾아보니 사전 설명으로 websocket 또한
+web servlet처럼 client 접근에 session을 가진다고 한다. 하지만 servlet처럼 http 프로토콜을 갖지 못하기에 http이 지원하는 
+기능을 대체할 함수를 만들어야 한다고 한다. 즉 client의 session을 만들어 줘야 한다. 그래야 broadcast 할시에 session으로
+전달 할 수 있는 것이다. websocket을 좀 더 찾아 보니 배달의민족에서는 socket.io라는 javascript library를 사용한다고 한다.
+갑자기 든 생각이지만 이 일지를 점차 영어를 늘려서 사용하다 보면 영어 실력이 늘지 않을까라는 생각이 든다. 그렇게 해볼까?
+영알못이 갑자기 영어를 쓸려고 하니깐 영알못부터 막힌다. 영알못은 어떻게 번역해야되는가 english newbie? 됬고 일지나 마저 쓰자.
+first this page that https://www.callicoder.com/spring-boot-websocket-chat-example/ refered is using stomp at client side
+but i have making a plan replacing stomp to socket.io later. 지금 내가 하고 싶은 말을 적고 영어로 만들고 그걸 구글 번역에 돌려고
+한글로 제대로 나오는 검수 하고 있다. 시간이 너무 많이 걸리는 것 같은데 점차 나아질 걸 생각하면 투자할 만한 것 같다. 그래서
+개발일지에 적을 만한 내용은 영어로 적고 내 개인적인 생각들을 한글로 적어 부담을 줄일려고 한다. i think i finished my study for websocket and broadcast
+then let's start front work using stomp but this site give to me method using html and javascript so i have to migrate this method for electron-vue
+okay let's do it. the work don't going well. when this, i have to focus function. 지금 하고 있는 작업이 진짜로 되는지 의문이다. 
+js -> vue인데 외부 스크립트를 가져오는 방식과 import 방식과 어떤 차이점이 있는지 잘 몰라서 이렇게 하는게 맞는 건가 하면서 진행중인데 잘 먹힐 지도 
+잘 모르겠다. 집중이 잘 안된다. 검색 좀 하다보니깐 vue부터는 socket io를 쓰는 모양이다. 시기가 좀 땡겨지긴 했지만 이쯤에서 라이브러리를
+변경하도록 하자. 점심 먹고 나서. 어떻게 하다보니깐 sockjs로도 연결이 되는 것을 확인했다. 그리고 내가 생각을 기록하고 정리할려고 
+이걸 쓰는건데 영어로 쓰면 생각이 정리가 안되서 쓰면 안된다. 한글을 애용하자. 일단 연결된 서버로그를 여기에 적겠다. 
+WebSocketSession[0 current WS(0)-HttpStream(0)-HttpPoll(0), 0 total, 0 closed abnormally (0 connect failure, 0 send limit, 0 transport error)], 
+stompSubProtocol[processed CONNECT(0)-CONNECTED(0)-DISCONNECT(0)], stompBrokerRelay[null], inboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0],
+outboundChannel[pool size = 0, active threads = 0, queued tasks = 0, completed tasks = 0], sockJsScheduler[pool size = 1, active threads = 1, queued tasks = 0, completed tasks = 0]
+stompjs가 안되서 메뉴얼을 찾아봤더니 쓸려고 했던 over property가 버전이 올라가면서 삭제됬다고 한다. 그래서 다른 라이브러리를 사용할려고 한다.
+webstomp-client로 넘어가고 대략적인 예제를 실행하고 나니 연결이 되었다. 문제는 이것의 경고 로그이다. 
+DEPRECATED: undefined is not a recognized STOMP version. In next major client version, this will close the connection.
+버전 관리가 안되는 듯하다. 일단 되긴 되니깐 이걸로 진행하기로 하였다. sockjs로 소켓을 하나 생성하고 webstomp의 over메소드 override이라고 
+간단하게 생각해도 된다이걸로 stomp가 지원되는 stompclient 라는 socket 객체를 만들고 connect 시도를 하였다. 이게 진짜 성공한건지 제대로 작동하고 있는지는
+다수의 연결 해제 통신 전달 수락 등이 있었지만 subscribe에 등록되어 있는 콜백 함수가 제대로 작동 리턴한 json 객체를 확인함으로써 성공한 것을 알 수 있었다.
+아직 파악하기 힘든 부분들이 있지만 계속 시도하다 보면 해결될 것이라 보인다. 
+Could not read JSON: Cannot deserialize instance of `echo.model.ChatMessage` out of START_ARRAY token 문제가 해결이 안된다. 
+라이브러리가 hearder에 1~40까지 키와 값을 한글자씩 분할해서 넣고 있다. 왜 이 작업을 하는지 모르겠다. 문제도 해결 안되고 이상한 프로세스가 진행된다.
+라이브러리를 변경하는 것이 좋겠다.
+
+
+
+
+
+
+
+ 

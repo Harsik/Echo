@@ -13,12 +13,14 @@ public class ChatController {
     @MessageMapping("/chat.sendMessage")
     @SendTo("/topic/public")
     public ChatMessage sendMessage(@Payload ChatMessage chatMessage) {
+        System.out.println("sendmessage");        
         return chatMessage;
     }
 
     @MessageMapping("/chat.addUser")
     @SendTo("/topic/public")
     public ChatMessage addUser(@Payload ChatMessage chatMessage, SimpMessageHeaderAccessor headerAccessor) {
+        System.out.println("addUser");
         // Add username in web socket session
         headerAccessor.getSessionAttributes().put("username", chatMessage.getSender());
         return chatMessage;

@@ -31,7 +31,14 @@ DEPRECATED: undefined is not a recognized STOMP version. In next major client ve
 아직 파악하기 힘든 부분들이 있지만 계속 시도하다 보면 해결될 것이라 보인다. 
 Could not read JSON: Cannot deserialize instance of `echo.model.ChatMessage` out of START_ARRAY token 문제가 해결이 안된다. 
 라이브러리가 hearder에 1~40까지 키와 값을 한글자씩 분할해서 넣고 있다. 왜 이 작업을 하는지 모르겠다. 문제도 해결 안되고 이상한 프로세스가 진행된다.
-라이브러리를 변경하는 것이 좋겠다.
+뭔지 알았다. send시 (destination, body='', headers={}) 이러한 파라미터를 갖는데 내가 hearder위치에 body값을 넣어서 그렇다.
+그 다음 연결에 성공하면 클라이언트는 /topic/public대상을 구독하고 /app/chat.addUser 목적지에 메시지를 보내 사용자 이름을 서버에 알려줍니다.라는데
+이게 무슨 소리인지 잘 모르겠다. headerAccessor.getSessionAttributes().put("username", chatMessage.getSender()); 라는 명령으로 websocket 통신에
+헤더로 유저들을 넣는다는 건가? 찾았다. 다음 headerAccessor 중에 simpSessionAttributes={username=user@email.com}이 보이는가?
+headerAccessor : StompHeaderAccessor [headers={simpMessageType=MESSAGE, stompCommand=SEND, nativeHeaders={destination=[/app/chat.addUser], content-length=[41]}, simpSessionAttributes={username=user@email.com}, simpHeartbeat=[J@2ed658c, lookupDestination=/chat.addUser, simpSessionId=4j4ubuak, simpDestination=/app/chat.addUser}]
+addUser로 온 통신으로 저 simpSessionAttributes에 접근한 user를 계속 추가하는듯 하다. 그리고 다른 유저들도 simpSessionAttributes를 통해 이 서버소켓으로 접근한
+유저가 누군지 알것이다. 이제 정리 하자면 websocket으로 client가 server에게 통신하면 client가 websocket에 등록한 subscribe로 이벤트를 받고 server는 응답을 broadcast하여 client가
+데이터를 받을 수 있는 것이다. 이제 남은 것 응답에 대한 ui 구성이다. 어떻게 화면을 짜고 데이터를 어떻게 구성할 것인가에 대해 생각해봐야한다.
 
 
 

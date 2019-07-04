@@ -65,7 +65,7 @@ public class AccountService implements UserDetailsService {
                 Account account = accountRepository.findByEmail(email).orElseThrow(
                                 () -> new UsernameNotFoundException("Account not found with email : " + email));
                 Profile profile = account.getProfile();
-                AvatarFileInfo avatarFileInfo = profile.getAvatarFileInfo();
+                AvatarFileInfo avatarFileInfo = profile.getAvatarFileInfo(); // 여기서 null exception에 대해 적지 않았기에 nullpoint error 발생
                 if (avatarFileInfo != null) {
                         avatarFileInfo.setName(name);
                         avatarFileInfo.setDownloadUri(downloadUri);

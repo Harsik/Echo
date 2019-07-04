@@ -17,12 +17,12 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.NoArgsConstructor;
+// import lombok.NoArgsConstructor;
 
 @Entity
 @Getter
 @Setter
-@NoArgsConstructor
+// @NoArgsConstructor
 public class AvatarFileInfo {
 
     @Id
@@ -47,6 +47,13 @@ public class AvatarFileInfo {
 
     @UpdateTimestamp
     private LocalDateTime updatedAt;
+
+    public AvatarFileInfo() {
+        this.name = "default";
+        this.downloadUri = "http://localhost:8080/api/file/downloadFile/512x512.png";
+        this.type = "image/png";
+        this.size = new Long("20001");
+    }
 
     @Builder
     public AvatarFileInfo(String name, String downloadUri, String type, Long size) {

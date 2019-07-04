@@ -2,6 +2,8 @@ package echo.controller;
 
 import echo.exception.AppException;
 import echo.model.Account;
+import echo.model.AvatarFileInfo;
+import echo.model.Profile;
 import echo.model.Role;
 import echo.model.RoleName;
 import echo.payload.ApiResponse;
@@ -70,16 +72,27 @@ public class AuthController {
             return new ResponseEntity(new ApiResponse(false, "Username is already taken!"), HttpStatus.BAD_REQUEST);
         }
         // Creating user's account
-        Account accont = new Account(signRequest.getEmail(), signRequest.getPassword());
+        Account account = new Account(signRequest.getEmail(), signRequest.getPassword());
 
-        accont.setPassword(passwordEncoder.encode(accont.getPassword()));
+        account.setPassword(passwordEncoder.encode(account.getPassword()));
 
         Role userRole = roleRepository.findByName(RoleName.ROLE_USER)
                 .orElseThrow(() -> new AppException("Account Role not set."));
         
-        accont.setRoles(Collections.singleton(userRole));
+        account.setRoles(Collections.singleton(userRole));
+        
+        Profile profile = new Profile();
 
-        Account result = accountRepository.save(accont);
+        AvatarFileInfo avatarFileInfo = new AvatarFileInfo();
+        
+        profile.setAvatarFileInfo(avatarFileInfo);
+        avatarFileInfo.setProfile(profile);
+
+        account.setProfile(profile);
+        profile.setAccount(account);
+
+        Account result = accountRepository.save(account); 
+
 
         URI location = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/accounts/{email}")
                 .buildAndExpand(result.getEmail()).toUri();

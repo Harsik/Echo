@@ -1,0 +1,46 @@
+개발 30일차
+내가 돌아왔다. RMS를 휘적거리며 그쪽에 있을 것이라 생각했던 것과는 다르게 더미 데이터가 없어 진행이 되지 않아
+다시 이쪽으로 돌아왔다. 그래서 다시 이 어플을 정상적으로 작동시키는 것을 목표로 작업을 진행하고 있다.
+테스트 도중 아바타가 업로드되지 않는다. 확인해 보니 Request processing failed; nested exception is java.lang.NullPointerException라는
+오류명이 보여 불러 오고자 하는 것이 null 이여서 문제가 생긴다는 것을 알았다. 하단에 자세한 오류 내역들이 있는데 그중에서
+at echo.service.AccountService.saveAvatar(AccountService.java:68) ~[main/:na]이 눈에 띄여 확인해 본 결과
+AvatarFileInfo avatarFileInfo = profile.getAvatarFileInfo();이것이 문제인 것을 알 수 있었다. 보면 profile에 
+avatarFileInfo를 얻을려 하자 null이여서 NullPointerException이 발생했다. avatarFileInfo의 문제인가 확인해봤더니 그것도 아니다.
+그렇다면 profile의 문제일 수도 있다. DB를 확인해보니 user@email.com에 해당하는 profile이 아에 없었다. profile을 작성 후 
+uploadavatar를 하자 정상적으로 작동하였다. 이런 오류를 두번 다시 일으키지 않으려면 signup시 해당 계정에 profile의 기본값을
+넣어 작성해야 한다. signup시 account에 대한 profile 기본 생성자를 넣었다. 이러면 이제 문제가 없을 것이다. 좋아 아바타가
+없어 에러가 뜨는 것 빼곤 정상적이다. 그렇다면 아바타의 기본값도 넣어야겠다. 좋아 해결됬다. 메뉴들을 하나씩 확인해 보며
+문제가 없는지 호가인하던 도중 채팅기능이 이상하단 것을 발견했다. 아바타가 정상적으로 불러와지지 않고 null을 리턴한다.
+chatMessage.setAvatarUrl(accountService.loadAvatarByEmail(chatMessage.getSender()).getDownloadUri());
+controller에 명령어가 제대로 써 있는데 무언가 이상하다. 그리고 채팅 글을 몇번 쳐봤을때는 아바타url이 불러와 졌었다.
+갑자기 이런다. 재시작하니깐 제대로 된다. 아마 아까 작업하다가 백서버에 재부팅해야 됬었나 보다. 이제 내가 6월 달에 못했던
+채팅 개선 작업을 시작할 때가 온것 같다. 점심 먹고 나서 말이다. 배부터 채우자.
+내 서버는 현재 spring security로 보안을 사용하고 있지만 client server간 통신에 대해서는 보안이 되어있지 않다. security가 거기까지는
+지원하지 않아서 어떤 방법이 있을까 찾아본 결과 SSL이라는 것이 이것에 대한 해결책이 될 수 있을 것 같다. 
+소켓 채팅의 개선보다 이걸 먼저 하기로 결정했다. Spring boot에 적용시키는 법이 있어 java의 keytool 기능으로 인증서를 하나 만들고
+적용시켰다. 그러자 client의 통신들이 
+OPTIONS http://localhost:8080/api/account/profile?email=user4@email.com net::ERR_INVALID_HTTP_RESPONSE
+라는 에러를 내 뱉기 시작했다. 내생각에는 client에서 http->https로 요청url를 변경해야겠다. 하지만
+OPTIONS https://localhost:8080/api/account/profile?email=user4@email.com net::ERR_INSECURE_RESPONSE
+이런 에러를 출력한다. 이유가 뭘까? 검색결과 http->https의 통신이나 https->http의 통신이 이러한 에러를 출력할 수 있다고 한다.
+client server가 http://localhost:9080인데 이걸 변경하면 해결 할 수 있을 것 같다. window frame까지는 뜨는데 
+안에 화면이 안보인다. yarn run dev에서는 화면부터 가상 웹을 구현해서 보여지는 것 같다. 그 구현하는 내부 구조까지는 잘 모르는지라
+단순히 http->https로 변경한다고 해서 해결 되지 않을 것 같다. build 및 package하면 주소가 file://로 시작하므로 좀 다를 지도 모른다는
+생각이 들었다. 한번 해보자. 안된다. 디버그창을 빌드한 곳에서는 열 수 없으니 다른 방법을 찾아보자. 찾아본 글에서 좀 더 읽어봤다.
+https://okky.kr/article/496801?note=1505043여긴데 디버그툴에서는 원래 보이는게 맞고 통신할때는 http는 암호화하는게 맞고
+https는 중간에 가로채도 암호화되있기 때문에 해독할 수 없다고 한다. 그러면 어떻게 할까? 생각보다 일이 복잡해진다.
+알아보면 알아볼 수록 복잡하기 그지 없다. 그와중에 spring security가 기본적으로 제공하는 패스워드 암호화 방식이 sha-1이라는것을 알아냈다.
+electron이 node를 서버로 쓰기 때문에 node를 이용한 ssl 적용방법을 찾았는데 지금 쓰고 있는 electron vue templete이 어떤 방식으로 서버를
+올리는 지 감춰져 있어 ssl을 적용하기 힘들다. 제3의 방법으로 http->https를 가능하게 하는 방법도 있고 그냥 script에서 base64같은
+간단한 암호화 방식으로 암호화하여 보내 임시방편으로 처리하는 방법도 있다. 그래도 좀 더 욕심내서 ssl를 적용시켜 보고 싶다.
+electron으로 적용 시킬 수 있는 지 알아 봤고 node 쪽으로 적용 시킬 수 있는지 알아 봤고 이제 webpack쪽에서 알아보는데 여기서 
+ssl도 사설과 공인이 따로 있는 것을 알 수 있다. 사설로는 java keytool로 만들 수 있는데 이게 java다 보니 webpack에서 인증서로 적용 시킬 수 없다.
+ssl가 뭐길래 내 머리를 복잡하게 만드는지 적용시키기가 힘들다. 드디어 openssl를 깔고 인증서를 만들었다. 만드는데에 시간 좀 걸렸지만
+crt, csr, 개인키, 공개키 등등 이제 이걸 어떻게 활용할 수 있는지만 찾으면 된다. server->client는 문제가 되지 않는다. client가 로그인 시 
+비밀번호를 전송할 때 client->server가 문제가 되는 것이지. 우선 해야 할 것은 SSL가 어떤 원리로 작동하는지 부터 살펴 보아야 한다.
+client가 비밀번호를 ssl를 통해 암호화하고 그것을 server가 받아 복호화 하는데 어떻게 하면 할 수 있는가?
+
+
+
+
+ 

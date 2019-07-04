@@ -43,7 +43,6 @@ public class FileController {
     @PostMapping("/uploadAvatar")
     public UploadFileResponse uploadAvatar(@RequestParam("file") MultipartFile file,
             @RequestParam("email") String email) {
-                System.out.println("email : " + email);
         String fileName = fileStorageService.storeFile(file);
         String fileDownloadUri = ServletUriComponentsBuilder.fromCurrentContextPath().path("/api/file/downloadFile/")
                 .path(fileName).toUriString();

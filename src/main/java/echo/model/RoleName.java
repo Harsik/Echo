@@ -7,5 +7,5 @@ package echo.model;
 // Enum 클래스형을 기반으로 한 클래스형 선언
 // 새로운 열거형을 선언하면, 내부적으로 Enum 클래스형 기반의 새로운 클래스형이 만들어짐.
 public enum RoleName {
-    ROLE_USER, ROLE_ADMIN, ROLE_MANAGER
+    ROLE_ADMIN, ROLE_MANAGER, ROLE_USER
 }

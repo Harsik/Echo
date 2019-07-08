@@ -67,7 +67,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .authorizeRequests()
                 .antMatchers("/", "/favicon.ico", "/**/*.png", "/**/*.gif", "/**/*.svg", "/**/*.jpg", "/**/*.html",
                         "/**/*.css", "/**/*.js")
-                .permitAll().antMatchers("/api/auth/**", "/ws/**").permitAll()
+                .permitAll().antMatchers("/api/auth/**", "/ws/**", "/api/mail/**").permitAll()
                 .antMatchers("/api/account/checkEmailAvailability").permitAll()
                 .antMatchers(HttpMethod.GET, "/api/polls/**", "/api/accounts/**").permitAll().anyRequest().authenticated();
         // Add our custom JWT security filter

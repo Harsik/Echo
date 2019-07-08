@@ -50,6 +50,19 @@ spring:
             file-size-threshold: 2KB
             max-file-size: 500MB
             max-request-size: 515MB
+    mail:
+        host: smtp.gmail.com
+        port: 587
+        protocol: smtp
+        default-encoding: UTF-8
+        username: aznm12@gmail.com
+        password: pm4tl40qns!@
+        properties:        
+            smtp:
+                auth: true
+                starttls:
+                    enable: true
+
         
 logging:
     level:

@@ -33,6 +33,10 @@ sourceCompatibility = 1.8
 targetCompatibility = 1.8
 
 dependencies {
+    // Spring boot mail Dependency
+    compile("org.springframework.boot:spring-boot-starter-mail")
+  	compile "org.springframework:spring-context-support"
+  	compile "com.sun.mail:javax.mail"
     // RabbitMQ Starter Dependency
     compile("org.springframework.boot:spring-boot-starter-websocket")
     compile("org.springframework.boot:spring-boot-starter-amqp")

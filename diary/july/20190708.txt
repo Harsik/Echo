@@ -6,8 +6,45 @@
 그런 삶은 주변 사람들보다 소득수준이 떨어져 우울감을 느끼고 결혼도 하지 못할 정도로 불안정하다고 한다. 결혼에 대한 내 생각은 어차피 소득이 어쨋던 못하는건 사람따름이고 
 어차피 할 수 있는 사람은 안하고 못하는 사람은 못하는 세상이 되어버렸다. 그래서 인구 감소치가 그 꼬라지가 되버린거지. 잡담은 여기까지
  저번주에 결국 구글 보안 문제를 해결하지 못해서 이메일 전송 기능이 작동하지 않았다. 내가 살펴본 시간이 얼마 되지 않아서 놓친 부분도 많다고 생각하고 생각지도 못한 부분에서 해결을 
-할 수 있다고 생각해 오늘 처음부터 다시 살펴볼려고 한다.
+할 수 있다고 생각해 오늘 처음부터 다시 살펴볼려고 한다. 저번 메일 전송 명령에서 오류문을 살펴 본 와중에 
+com.sun.mail.smtp.SMTPSendFailedException: 530 5.7.0 Must issue a STARTTLS command first 에 대한 오류를 검색해 보았다. 검색 헌데 아주 간단하게도 프로퍼티 STARTTLS에 대해
+enable 설정을 하지 않은 것이라는 결과가 나왔다. property 설정이 잘못된 것이라 생각이 들어 application.yml이 보통 어떤 구조로 되있는 검색해 보았다. 그리고 그 구조대로 수정해 
+실행해 봤더니 됬다 오류문이 변경되서 나오긴 했지만 내 메일로 보안 경고 메일이 온걸로 봐서는 내가 설정한 포트번호로 성공적으로 접근했다는 것을 알 수 있었다. 이제 접근에 필요한
+권한만 얻으면 된다. 하지만 테스트할려고 하는 이 계정이 내가 개인적으로 쓰고 있는 메일이라서 다른 것으로 변경할 필요가 있다. 테스트용 메일을 하나 만들어야겟다. 메일을 하나 만들었다.
+내가 만들려고 했던 메일명들이 대부분 막히는게 좀 문제였지만 망할 분명 중국인들이 해킹용으로 만들었을 것이다. 메일 만들고 보안 설정을 내 프로젝트에 적합하게 변경 후에 메일 전송을
+시도해 보았다. 됬다. 됬어. 받는 메일인 aznm12@archivsoft.com에서 메일이 와있는걸 확인할 수 있었다. 환희의 감정이 뚜껑 열린 향수 향기처럼 내 가슴을 채워나간다. 메일을 열어 
+제목 내용 보낸 메일 받은 메일에 이상이 없는지 확인 후 앱에서는 어떻게 만들지 고민해보기로 하였다. 참고할 만한 화면이 뭐가 있을까 찾아보다가 회사 이메일인 하이웍스 이메일 쓰기를
+열어 보았다. 보낼사람, 참조, 제목, 첨부파일, 내용으로 이루어져 있는데 내용에 에디터를 사용한다. 궁금한 것은 에디터를 사용하고 보냈는데 받는 사람이 에디터를 사용하지 않는다면
+예를 들어 하이웍스에서 지메일로 보냈는데 서로 문서 양식이 호환이 되는 것인가? 된다면 어떻게? 알겠다 html 언어를 이용하여 글자의 크기 및 색상으로 조절하는 것이였다. 그래서 완전한
+text모드에서는 모든 양식이 사라지는 것이다. 그리고 첨부파일도 가능하게 만들어 보고 싶다. 일단 text만 가능하게 해보자. 간단하게 만들고 전송하였다. 점심 먹고 나서
+이메일에 첨부파일을 전송할 수 있도록 서버와 앱 코드를 작성해볼 것이다. 전송 하고 나면 폼 안에 필드가 전부 빈칸으로 만드는 것이 좋을까? 그리고 이메일이 성공적으로 보내지거나 
+실패하면 그것에 대한 알림을 볼 수 있도록 만들어야겠다. 그리고 보내기는 있어도 받기는 없어서 이걸 좀 곤란해 하고 있는 참이다. 보내는 것은 확실히 gmail 메일서버가 있기에 
+서버를 통해서 보낼 수 있지만 받는건? 받는건 어떻게 확인 할 수 있는가? 이래서 다들 Oauth를 사용하나 보다. Oauth를 쓰지 않으면 자체 메일서버를 만들어 써야되니 말이다.
+내가 메일서버를 만드는 것은 너무 일이 나가는 것이며 Oauth를 쓰지 않는 중이니 받기는 다른 방법이 있는지 찾아봐야겠다. 일단 첨부파일을 전송하기 위해서는 기존에 쓰던 SimpleMailMessage
+대신에 MimeMessage를 사용해야 한다. Multimedia가 들어가서 Mime이 붙는다. 거기에 MimeMessageHelper를 추가하여 file을 덧붙일 수 있는데 문제는 MultipartFile이 지원이 되는지 모르겠다.
+일단 시도해보자 기존에 File 클래스가 들어가는 자리를 MultipartFile로 바꾸어 넣을 것이다. 안되서 생각헌데 MultipartFile을 File로 변환하면 문제 없는가 싶어 찾아봤더니 MultipartFile이
+지원하는 transferTo 메소드로 이걸 해결 할 수 있을 것 같다. 파일이 여러개면 또 어떻게 하는가에 대한 문제는 잠시 접어두고 파일 하나만 올려보자. Content type 'text/plain;charset=UTF-8' not supported
+오류가 발생한다. 아바타 파일을 업로드 할 때는 Contenttype이 적절히 들어갔는데 여긴또 그렇지 않다. 뒤에 boundary 옵션을 붙여서 되긴 되지만 서버에서는 parsing 에러가 앱에서는 cors에러가
+발생한다. 서버에러가 Connection terminated parsing multipart data인걸로 봐선 연결이 끊긴것이므로 cors에러로 인해 연결이 끊겼다고 볼 수 있다. fetch mode 옵션에다 no cors를
+추가하여 cors에러는 일단 뜨지 않는다. 하지만 내 예상이 틀려 Connection terminated parsing multipart data는 계속 남아있다. 서버 코드를 다시 보니 수정할 부분이 남아있었다.
+Mail 클래스에다 MultipartFile을 넣어 사용할려고 했는데 그걸 변경해 버려서 그 이후 MultipartFile을 제거하는 작업을 하지 않았었다. 하고 나서 파라미터로 받는 file로 기존 mail에 getfile을
+변경하였는데 이것또한 오류를 해결 해 주지 못했다. 머리에 김이 나고 있는 기분이다. Contenttype이 없던 multipart form data던 뒤에 옵션이 붙이던 전부 다 오류다. 처음부터 다시 다시 생각해보자.
+목적은 메일 보낼 시 첨부파일 1개 추가이다. 그래서 기존 메일 보내는 메소드에서 file을 올리는 태그 및 메소드를 작성하고 그것을 rest api를 통해 MultipartFile로 file이라는 파라미터를 폼에 넣어
+전송하였다. 하지만 FileSystemResource fileResource = new FileSystemResource(multipartToFile(file)); 이부분에서 multipartToFile을 실행할 때 file을 parsing할 수 없다는 것 같다.
+메소드를 변경해보자. 아 젠장 동일한 오류가 난다. 그렇다면 다른 문제인데 break point를 잡아서 찾아봐야겠다. 아에 메소드 안으로 들어가지 않는다. 그래서 fetch쪽으로 돌아왔더니 이제 보니깐
+개발자모드에서 request parameter 텅비어 있다는 것을 알아냈다. 원래 예상했던 대로 라면
+------WebKitFormBoundary3cR208L9KIpo9qj6
+Content-Disposition: form-data; name="file"; filename="depositphotos_122124896-stock-illustration-los-stylized-dots-deer-geometric.jpg"
+Content-Type: image/jpeg
 
+
+------WebKitFormBoundary3cR208L9KIpo9qj6
+Content-Disposition: form-data; name="email"
+
+user@email.com
+------WebKitFormBoundary3cR208L9KIpo9qj6--
+이런식으로 나와야한다. 도대체 뭐가 문제일까? file 객체와 emailrequest 객체도 fetch전에 이상이 없다. form에 담긴 후 fetch하면 parameter가 비어잇다. 혹시 몰라서 MultipartFile 대신에
+filepath만 보내는 방법으로 fetch 메소드를 수정해봤지만 결국 parameter가 비어 있어 같은 오류를 반복한다. 
 
 
 

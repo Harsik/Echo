@@ -1,6 +1,7 @@
 package echo.controller;
 
 import echo.payload.*;
+import echo.service.FileStorageService;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,7 +27,9 @@ public class MailController {
 
     // @Autowired
     // private MailSender sender;
-
+    @Autowired
+    private FileStorageService fileStorageService;
+    
     @Autowired
     public JavaMailSender emailSender;
 
@@ -46,8 +49,11 @@ public class MailController {
     }
 
     @PostMapping("/send")
-    // public void sendMail(@RequestParam("file") MultipartFile file, @RequestParam("mail") Mail mail) throws MessagingException, IllegalStateException, IOException {
-        public void sendMail(@RequestParam("filePath") String filePath, @RequestParam("mail") Mail mail) throws MessagingException, IllegalStateException, IOException {
+    // public void sendMail(@RequestParam("file") MultipartFile file, @RequestParam("mail") @RequestBody Mail mail) throws MessagingException, IOException {
+        // public void sendMail(@RequestParam("filePath") String filePath, @RequestParam("mail") Mail mail) throws MessagingException {
+        public void sendMail(@RequestParam("file") MultipartFile file, @RequestParam("sender") String sender,
+            @RequestParam("receiver") String receiver, @RequestParam("subject") String subject,
+            @RequestParam("text") String text) throws MessagingException, IOException {
         // SimpleMailMessage msg = new SimpleMailMessage();
         // msg.setFrom(mail.getSender());
         // msg.setTo(mail.getReceiver());
@@ -59,16 +65,18 @@ public class MailController {
 
         MimeMessageHelper helper = new MimeMessageHelper(message, true);
         System.out.println("MimeMessageHelper");
-        helper.setFrom(mail.getSender());
-        helper.setTo(mail.getReceiver());
-        helper.setSubject(mail.getSubject());
-        helper.setText(mail.getText());
-        System.out.println("MimeMessageHelper set");
-
-        // FileSystemResource fileResource = new FileSystemResource(convert(file));
-        FileSystemResource fileResource = new FileSystemResource(new File(filePath));
-        System.out.println("FileSystemResource convert");
-        helper.addAttachment("Invoice", fileResource);
+        // helper.setFrom(mail.getSender());
+        // helper.setTo(mail.getReceiver());
+        // helper.setSubject(mail.getSubject());
+        // helper.setText(mail.getText());
+        helper.setFrom(sender);
+        helper.setTo(receiver);
+        helper.setSubject(subject);
+        helper.setText(text);
+        String fileName = fileStorageService.storeFile(file);
+        FileSystemResource fileResource = new FileSystemResource(convert(file));
+        // FileSystemResource fileResource = new FileSystemResource(new File(filePath));
+        helper.addAttachment(fileName, fileResource);
 
         emailSender.send(message);
     }
